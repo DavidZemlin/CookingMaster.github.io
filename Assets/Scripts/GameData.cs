@@ -7,29 +7,62 @@ using UnityEngine;
 // this script holds data that needs to be kept between scenes or game sessions
 public class GameData : MonoBehaviour
 {
-    private const int NUMBER_OF_HIGH_SCORES = 10;
-    private const string DEFAULT_NAME = "empty";
-
-    private const string SAVE_FILE_NAME = "save.dat";
+    // constants
+    public const int NUMBER_OF_HIGH_SCORES = 10;
     public const string END_OF_CATAGORY_LINE = "--c--";
 
-    [SerializeField] private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES];
+    private const string DEFAULT_NAME = "Player";
+    private const string SAVE_FILE_NAME = "save.dat";
+    private const int DEFAULT_VOLUME = 100;
 
+    // variables
+    [SerializeField] private GameController gameController;
+    [SerializeField] private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES];
+    [SerializeField] private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES];
+    private string player1Name = DEFAULT_NAME;
+    private string player2Name = DEFAULT_NAME;
+    [SerializeField] private int musicVolume = DEFAULT_VOLUME; //---------------------------------------------------------------------------------
+    [SerializeField] private int soundVolume = DEFAULT_VOLUME; //---------------------------------------------------------------------------------
+
+    // getters
+    public HighScore[] GetHighScore() { return highScores; }
+    public HighScore[] GetHighScore2Player() { return highScores2Player; }
+    public string GetPlayer1Name() { return player1Name; }
+    public string GetPlayer2Name() { return player2Name; }
+    public int GetMusicVolume() { return musicVolume; }
+    public int GetSoundVolume() { return soundVolume; }
+
+    //setters
+    public void SetHighScore(HighScore[] newHighScores) { highScores = newHighScores; }
+    public void SetHighScore2Player(HighScore[] newHighScores) { highScores2Player = newHighScores; }
+    public void SetPlayer1Name(string newName) { player1Name = newName; }
+    public void SetPlayer2Name(string newName) { player2Name = newName; }
+    public void SetMusicVolume(int newVolume) { musicVolume = newVolume; }
+    public void SetSoundVolume(int newVolume) { soundVolume = newVolume; }
+
+    // functions
+
+    // Initialize GamneData object
     private void Awake()
     {
         // mark game data object as "don't destroy"
         DontDestroyOnLoad(gameObject);
 
-        // initialize high score list;
+        // initialize high score lists;
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
         {
             highScores[i] = new HighScore(DEFAULT_NAME, 0);
         }
-    }
+        for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
+        {
+            highScores2Player[i] = new HighScore(DEFAULT_NAME, 0);
+        }
 
-    void OnApplicationQuit()
-    {
-        saveGameData();
+        // load data if there is any
+        loadGameData();
+
+        // tell the game controller to continue out of startup phase
+        gameController.LoadMainMenu();
     }
 
     // saves all game data that is meant to persist between game session.
@@ -40,11 +73,26 @@ public class GameData : MonoBehaviour
     {
         List<string> dataPack = new List<string>();
 
+        // save the last entered player names
+        dataPack.Add(GetPlayer1Name());
+        dataPack.Add(GetPlayer2Name());
+
+        // save volume settings
+        dataPack.Add(GetMusicVolume().ToString());
+        dataPack.Add(GetSoundVolume().ToString());
+
         // save High Scores
-        foreach (HighScore s in highScores)
+        for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
         {
-            dataPack.Add(s.getName());
-            dataPack.Add(s.getScore().ToString());
+            dataPack.Add(highScores[i].getName());
+            dataPack.Add(highScores[i].getScore().ToString());
+        }
+        dataPack.Add(END_OF_CATAGORY_LINE);
+
+        for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
+        {
+            dataPack.Add(highScores2Player[i].getName());
+            dataPack.Add(highScores2Player[i].getScore().ToString());
         }
         dataPack.Add(END_OF_CATAGORY_LINE);
 
@@ -63,6 +111,19 @@ public class GameData : MonoBehaviour
 
         int lineNumber = 0;
 
+        // read the last entered player names
+        SetPlayer1Name(dataPack[lineNumber]);
+        lineNumber++;
+        SetPlayer2Name(dataPack[lineNumber]);
+        lineNumber++;
+
+        // read volume settings
+        SetMusicVolume(int.Parse(dataPack[lineNumber]));
+        lineNumber++;
+        SetSoundVolume(int.Parse(dataPack[lineNumber]));
+        lineNumber++;
+
+        // read 1 player high scores
         int counter = 0;
         while (END_OF_CATAGORY_LINE.CompareTo(dataPack[lineNumber]) != 0)
         {
@@ -70,8 +131,20 @@ public class GameData : MonoBehaviour
             lineNumber++;
             int score = int.Parse(dataPack[lineNumber]);
             lineNumber++;
-            highScores[0] = new HighScore(name, score);
+            highScores[counter] = new HighScore(name, score);
+            counter++;
+        }
+
+        // read 2 player high scores
+        counter = 0;
+        while (END_OF_CATAGORY_LINE.CompareTo(dataPack[lineNumber]) != 0)
+        {
+            string name = "" + dataPack[lineNumber];
             lineNumber++;
+            int score = int.Parse(dataPack[lineNumber]);
+            lineNumber++;
+            highScores2Player[counter] = new HighScore(name, score);
+            counter++;
         }
     }
 
@@ -130,21 +203,5 @@ public class GameData : MonoBehaviour
             linesList.Add(s);
         }
         return linesList;
-    }
-
-    // nested class for tracking high scores
-    private class HighScore
-    {
-        private string name;
-        private int score;
-
-        public HighScore(string newName, int newScore)
-        {
-            name = newName;
-            score = newScore;
-        }
-
-        public string getName() { return name; } // I like to make simple getter and setter functions use only one line
-        public int getScore() { return score; }
     }
 }
