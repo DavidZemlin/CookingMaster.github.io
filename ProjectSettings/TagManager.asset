@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - GameData
+  - Container
+  - Item
+  - Appliance
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Player
   - 
   - 
   - 

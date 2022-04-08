@@ -21,8 +21,8 @@ public class GameData : MonoBehaviour
     [SerializeField] private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES];
     private string player1Name = DEFAULT_NAME;
     private string player2Name = DEFAULT_NAME;
-    [SerializeField] private int musicVolume = DEFAULT_VOLUME; //---------------------------------------------------------------------------------
-    [SerializeField] private int soundVolume = DEFAULT_VOLUME; //---------------------------------------------------------------------------------
+    private int musicVolume = DEFAULT_VOLUME;
+    private int soundVolume = DEFAULT_VOLUME;
 
     // getters
     public HighScore[] GetHighScore() { return highScores; }
@@ -47,6 +47,13 @@ public class GameData : MonoBehaviour
     {
         // mark game data object as "don't destroy"
         DontDestroyOnLoad(gameObject);
+
+        // if game controller has not been assigned, find it and assign it
+        if (gameController == null)
+        {
+            GameObject gameControllObj = GameObject.FindGameObjectWithTag("GameController");
+            gameController = gameControllObj.GetComponent<GameController>();
+        }
 
         // initialize high score lists;
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)

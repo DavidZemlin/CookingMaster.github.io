@@ -1,10 +1,19 @@
 # CookingMaster.github.io
 A simple chef game
 
+
+Ingredients
+=====================
+Green = Letus
+Red = Tomato
+Purple = Cabage
+Yellow = Squash
+Orange = Carrot
+Pink = Berries
+
 To-Do
 =====================
-Make floor of game bored
-Make character controllers
+
 
 Time Card
 =====================
@@ -17,4 +26,9 @@ Time Card
 4-7-22 20:00 - 00:30
 	Finished ver 1 of save load script
 	Finished menu and scene trees
+4-8-22 07:30 - 11:45
+	Built basic map
+	finished player input
+	finished player movment and colision
+	Started work on player interactions
 	

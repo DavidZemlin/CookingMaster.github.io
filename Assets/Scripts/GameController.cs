@@ -17,6 +17,12 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
+        // find game data object if it has not been assigned
+        if (gameData == null)
+        {
+            GameObject dataObj = GameObject.FindGameObjectWithTag("GameData");
+            gameData = dataObj.GetComponent<GameData>();
+        }
         DontDestroyOnLoad(gameObject);
     }
 
