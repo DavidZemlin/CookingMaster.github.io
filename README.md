@@ -3,8 +3,8 @@ A simple chef game
 
 To-Do
 =====================
-Make menu Navigation script
 Make floor of game bored
+Make character controllers
 
 Time Card
 =====================
@@ -14,5 +14,7 @@ Time Card
 	Setting up unity project
 	Basic Main menu made
 	Started work on GameData Save/Load script
-4-7-22 20:00 -
+4-7-22 20:00 - 00:30
 	Finished ver 1 of save load script
+	Finished menu and scene trees
+	
