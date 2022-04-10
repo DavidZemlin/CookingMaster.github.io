@@ -120,11 +120,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 7036271637761391174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2c216c897395f64480a1678963acad5, type: 3}
+  m_Script: {fileID: 11500000, guid: 595e9799802a2b94281d7713fca26f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rBody: {fileID: 6275649722976278440}
-  itemCollider: {fileID: 2452032284680101232}
+  rBody: {fileID: 0}
+  itemCollider: {fileID: 0}
   placedFacing: {x: 0, y: 0, z: 0}
-  baseScore: 10
-  coppingTime: 5
+  heldFacing: {x: 0, y: 0, z: 0}
+  ingredientType: 2

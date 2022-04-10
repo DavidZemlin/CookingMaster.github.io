@@ -5,9 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - GameData
-  - Container
   - Item
   - Appliance
+  - HUD
   layers:
   - Default
   - TransparentFX

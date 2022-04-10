@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5768666038014543849}
   - component: {fileID: 7715791752354535516}
   - component: {fileID: 6669738048254441437}
-  - component: {fileID: 3676703996708946186}
+  - component: {fileID: 1552779374093170170}
   m_Layer: 0
   m_Name: Carrot
   m_TagString: Untagged
@@ -112,7 +112,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3676703996708946186
+--- !u!114 &1552779374093170170
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,11 +121,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6488700496389056341}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2c216c897395f64480a1678963acad5, type: 3}
+  m_Script: {fileID: 11500000, guid: 595e9799802a2b94281d7713fca26f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rBody: {fileID: 0}
   itemCollider: {fileID: 0}
-  placedFacing: {x: 90, y: 0, z: 0}
-  baseScore: 8
-  coppingTime: 4
+  placedFacing: {x: 0, y: 0, z: 0}
+  heldFacing: {x: 0, y: 0, z: 0}
+  ingredientType: 1

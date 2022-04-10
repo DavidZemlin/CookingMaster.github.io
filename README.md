@@ -31,4 +31,8 @@ Time Card
 	finished player input
 	finished player movment and colision
 	Started work on player interactions
+4-8-22 22:30 - 00:00
+	finished basic interations
+	made 6 veggies!!!
+	
 	
