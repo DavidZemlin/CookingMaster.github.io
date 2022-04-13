@@ -148,54 +148,72 @@ public class Player : MonoBehaviour
         }
     }
 
-    // call player wants to attempt to pick up an item
+    // call if player wants to attempt to pick up an item
     private void PickUpCommand()
     {
         if (HasOpenHand())
         {
-            if (itemInteractor.GetAppliance() != null)
+            Appliance appliance = itemInteractor.GetAppliance();
+            if (appliance != null)
             {
-                Counter counter = itemInteractor.GetAppliance().gameObject.GetComponent<Counter>();
-                if (counter != null && counter.GetItemOnCounter() != null)
+                // if the player is picking up from a counter then get the item on it, if it has one
+                Counter counter = appliance.gameObject.GetComponent<Counter>();
+                if (counter != null)
                 {
-                    PickUpItem(counter.GetItemOnCounter());
-                    counter.RemoveItem();
+                    Item itemOnCounter = counter.GetItemOnCounter();
+                    if (itemOnCounter != null)
+                    {
+                        PickUpItem(itemOnCounter);
+                        counter.RemoveItem();
+                        return;
+                    }
+                }
+                // if the player uses the pickUp command on a crate it should be treated the same
+                //      as if they had used the "use" command on it. (special case for better UI)
+                Crate crate = appliance.gameObject.GetComponent<Crate>();
+                if (crate != null)
+                {
+                    useAppliance(appliance);
                     return;
                 }
             }
         }
     }
 
-    // call player wants to attempt to drop an item
+    // call if player wants to attempt to drop an item
     private void DropCommand()
     {
-        if (GetLeftHandItem() != null)
+        Item leftHandItem = GetLeftHandItem();
+        if (leftHandItem != null)
         {
-            if (itemInteractor.GetAppliance() != null)
+            Counter counter = itemInteractor.GetAppliance().gameObject.GetComponent<Counter>();
+            if (counter != null)
             {
-                Counter counter = itemInteractor.GetAppliance().gameObject.GetComponent<Counter>();
-                if (counter != null && counter.GetItemOnCounter() == null)
+                Item itemOnCounter = counter.GetItemOnCounter();
+                if (itemOnCounter != null)
                 {
-                    PlaceItem(counter, GetLeftHandItem());
-                    return;
+                    PlaceItem(counter, leftHandItem);
                 }
             }
         }
     }
 
-    // call player wants to attempt to use an appliance
+    // call if player wants to attempt to use an appliance
     private void UseCommand()
     {
-        if (HasOpenHand() && itemInteractor.GetAppliance() != null)
+        if (HasOpenHand())
         {
-            useAppliance();
+            Appliance appliance = itemInteractor.GetAppliance();
+            if (appliance !=null)
+            {
+                useAppliance(appliance);
+            }
         }
     }
 
     // use an appliance
-    public void useAppliance()
+    public void useAppliance(Appliance appliance)
     {
-        Appliance appliance = itemInteractor.GetAppliance();
         if (appliance != null)
         {
             appliance.Use(this);
