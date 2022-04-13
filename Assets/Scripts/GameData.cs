@@ -7,7 +7,7 @@ using UnityEngine;
 // this script holds data that needs to be kept between scenes or game sessions
 public class GameData : MonoBehaviour
 {
-    // constants
+    // ---data members---
     public const int NUMBER_OF_HIGH_SCORES = 10;
     public const string END_OF_CATAGORY_LINE = "--c--";
 
@@ -15,10 +15,9 @@ public class GameData : MonoBehaviour
     private const string SAVE_FILE_NAME = "save.dat";
     private const int DEFAULT_VOLUME = 100;
 
-    // variables
     [SerializeField] private GameController gameController;
-    [SerializeField] private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES];
-    [SerializeField] private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES];
+    [SerializeField] private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES]; // ---------------------------------- serialized for debug
+    [SerializeField] private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES]; // ---------------------------------- serialized for debug
     private string player1Name = DEFAULT_NAME;
     private string player2Name = DEFAULT_NAME;
     private int musicVolume = DEFAULT_VOLUME;
@@ -40,9 +39,7 @@ public class GameData : MonoBehaviour
     public void SetMusicVolume(int newVolume) { musicVolume = newVolume; }
     public void SetSoundVolume(int newVolume) { soundVolume = newVolume; }
 
-    // functions
-
-    // Initialize GamneData object
+    // ---unity methods---
     private void Awake()
     {
         // mark game data object as "don't destroy"
@@ -71,6 +68,8 @@ public class GameData : MonoBehaviour
         // tell the game controller to continue out of startup phase
         gameController.LoadMainMenu();
     }
+
+    // ---primary methods---
 
     // saves all game data that is meant to persist between game session.
     //      first this function packs all data into a list of strings

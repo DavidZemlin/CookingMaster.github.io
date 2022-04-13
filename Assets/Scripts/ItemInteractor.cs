@@ -1,80 +1,65 @@
-﻿using System.Collections;
+﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
+// ---------------------------------- serialized for debug
+// ---data members---
+// ---getters---
+// ---setters---
+// ---constructors---
+// ---unity methods---
+// ---primary methods---
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // script for the collider that detects what is in the players current reach
 public class ItemInteractor : MonoBehaviour
 {
+    // ---data members---
     [SerializeField] private Player player;
-    [SerializeField] private List<Transform> inRangeItems; //-------------------------------------------------------------
-    [SerializeField] private List<Transform> inRangeAppliances; //-------------------------------------------------------------
-    // initialize null variables
+    [SerializeField] private List<Transform> inRangeAppliances; // ---------------------------------- serialized for debug
+
+    // ---unity methods---
     private void Awake()
     {
+        // initialize null variables
         if (player == null)
         {
             player = GetComponentInParent<Player>();
         }
     }
 
-    // add items to the list of interactable items in range if they enter this trigger
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Item"))
-        {
-            inRangeItems.Add(other.transform);
-        }
-        else if (other.CompareTag("Appliance"))
+        // add appliances to the list of intractable appliances in range if they enter this trigger
+        if (other.CompareTag("Appliance"))
         {
             inRangeAppliances.Add(other.transform);
         }
     }
 
-    // remove items to the list of interactable items in range if they exit this trigger
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Item"))
-        {
-            inRangeItems.Remove(other.transform);
-        }
-        else if (other.CompareTag("Appliance"))
+        // remove appliance from the list of intractable appliances in range if it exits this trigger
+        if (other.CompareTag("Appliance"))
         {
             inRangeAppliances.Remove(other.transform);
         }
     }
 
-    // returns to closest item to the center of the interactor //-----------------------------This is used for loose items should we implement them
-    public Item getItem()
-    {
-        Item foundItem = null;
-        if (inRangeItems.Count < 1)
-        {
-            return null;
-        }
-        else if (inRangeItems.Count < 2)
-        {
-            foundItem = inRangeItems[0].gameObject.GetComponent<Item>();
-        }
-        else
-        {
-            foundItem = CustomMath.closestTransform(transform, inRangeItems).gameObject.GetComponent<Item>();
-        }
-        return foundItem;
-    }
+    // ---primary methods---
 
-    // returns to closest appliance to the center of the interactor
+    // returns to closest appliance to the center of the intractor
     public Appliance GetAppliance()
     {
         Appliance foundAppliance = null;
-        if (inRangeAppliances.Count < 1)
+        if (inRangeAppliances.Count < 1) // no appliance in range: return null
         {
             return null;
         }
-        else if (inRangeAppliances.Count < 2)
+        else if (inRangeAppliances.Count < 2) // only 1 appliance in range : no need to search list for closest
         {
             foundAppliance = inRangeAppliances[0].gameObject.GetComponent<Appliance>();
         }
-        else
+        else // use custom distance script to find the closet appliance to aiming point
         {
             foundAppliance = CustomMath.closestTransform(transform, inRangeAppliances).gameObject.GetComponent<Appliance>();
         }

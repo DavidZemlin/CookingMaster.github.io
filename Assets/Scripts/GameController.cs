@@ -8,8 +8,10 @@ using UnityEngine.SceneManagement;
 // this script handles core application functions and scene loading
 public class GameController : MonoBehaviour
 {
+    // ---data members---
     [SerializeField] private GameData gameData;
 
+    // ---unity methods---
     void OnApplicationQuit()
     {
         gameData.saveGameData();
@@ -23,19 +25,26 @@ public class GameController : MonoBehaviour
             GameObject dataObj = GameObject.FindGameObjectWithTag("GameData");
             gameData = dataObj.GetComponent<GameData>();
         }
+
+        // mark this data object to not be destroyed on load
         DontDestroyOnLoad(gameObject);
     }
 
+    // ---primary methods---
+
+    // load scene - MainMenu
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
     }
 
+    // load scene - 1PlayerGame
     public void Load1PlayerGame()
     {
         SceneManager.LoadScene("1PlayerStage1");
     }
 
+    // load scene - 2PlayerGame
     public void Load2PlayerGame()
     {
         SceneManager.LoadScene("2PlayerStage1");

@@ -1,20 +1,31 @@
-﻿using UnityEngine;
+﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
+// ---------------------------------- serialized for debug
+// ---data members---
+// ---getters---
+// ---setters---
+// ---constructors---
+// ---unity methods---
+// ---primary methods---
+using UnityEngine;
 
 // script for controllable player characters
 //      it includes movement and interactions
 public class Player : MonoBehaviour
 {
-    [SerializeField] private HudController hudController;
+    // ---data members---
     [SerializeField] private CharacterController characterController;
     [SerializeField] private ItemInteractor itemInteractor;
     [SerializeField] private Transform leftHandSlot;
     [SerializeField] private Transform rightHandSlot;
     [SerializeField] [Range(1,2)] private int playerNumber = 1;
-    [SerializeField] private float maxSpeed;
-    [SerializeField] private float rotationSpeed;
 
+    private HudController hudController;
     private Vector3 moveInput;
     private Quaternion toRotation;
+    [SerializeField] private Item leftHandItem; // ---------------------------------- serialized for debug
+    [SerializeField] private Item rightHandItem; // ---------------------------------- serialized for debug
+    [SerializeField] private float maxSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
+    [SerializeField] private float rotationSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
     private float vert;
     private float hori;
     private bool moving;
@@ -22,22 +33,20 @@ public class Player : MonoBehaviour
     private bool drop;
     private bool chop;
 
-    [SerializeField] private Item leftHandItem; // --------------------------------------------------------------------------
-    [SerializeField] private Item rightHandItem; // --------------------------------------------------------------------------
-
-    // getters
+    // ---getters---
     public Transform GetLeftHandSlot() { return leftHandSlot; }
     public Transform GetRightHandSlot() { return rightHandSlot; }
     public Item GetLeftHandItem() { return leftHandItem; }
     public Item GetRightHandItem() { return rightHandItem; }
 
-    // setters
+    // ---setters---
     public void SetLeftHandItem(Item newItem) { leftHandItem = newItem; }
     public void SetRightHandItem(Item newItem) { rightHandItem = newItem; }
 
-    // Initialize null variables
+    // ---unity methods---
     private void Awake()
     {
+        // Initialize null variables
         if (hudController == null)
         {
             hudController = GameObject.FindGameObjectWithTag("HUD").GetComponent<HudController>();
@@ -123,6 +132,8 @@ public class Player : MonoBehaviour
 
     }
 
+    // ---primary methods---
+
     // check if the player has an open hand
     public bool HasOpenHand()
     {
@@ -137,18 +148,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void useAppliance()
-    {
-        if (HasOpenHand())
-        {
-            Appliance appliance = itemInteractor.GetAppliance();
-            if (appliance != null)
-            {
-                appliance.Use(this);
-            }
-        }
-    }
-
+    // call player wants to attempt to pick up an item
     private void PickUpCommand()
     {
         if (HasOpenHand())
@@ -163,13 +163,10 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-            if (itemInteractor.getItem() != null)
-            {
-                PickUpItem(itemInteractor.getItem());
-            }
         }
     }
 
+    // call player wants to attempt to drop an item
     private void DropCommand()
     {
         if (GetLeftHandItem() != null)
@@ -183,21 +180,29 @@ public class Player : MonoBehaviour
                     return;
                 }
             }
-            else
-            {
-                //DropItem(GetLeftHandItem());   //------------------------------------------------------disabled till for now ------------------
-            }
         }
     }
 
+    // call player wants to attempt to use an appliance
     private void UseCommand()
     {
         if (HasOpenHand() && itemInteractor.GetAppliance() != null)
         {
-            itemInteractor.GetAppliance().Use(this);
+            useAppliance();
         }
     }
 
+    // use an appliance
+    public void useAppliance()
+    {
+        Appliance appliance = itemInteractor.GetAppliance();
+        if (appliance != null)
+        {
+            appliance.Use(this);
+        }
+    }
+
+    // pick up an item
     public void PickUpItem(Item item)
     {
         Transform openHand = null;
@@ -216,30 +221,27 @@ public class Player : MonoBehaviour
         item.transform.localPosition = Vector3.zero;
     }
 
-    public void PlaceItem(Counter destination, Item incommingItem)
+    // place/drop an item
+    public void PlaceItem(Counter destination, Item itemInhand)
     {
+        // if counter is empty, place the item
         if (destination.GetItemOnCounter() == null)
         {
-            incommingItem.transform.SetParent(null);
+            itemInhand.transform.SetParent(null);
             SetLeftHandItem(null);
-            destination.recieveItem(incommingItem);
+            destination.recieveItem(itemInhand);
             SwapItemRightToLeftHand();
         }
-        else if (destination.GetItemOnCounter().GetType().Equals(typeof(ComboItem)) && incommingItem.GetType().Equals(typeof(ComboItem)))
+        // if the counter has an item on it, attempt to combine the items if both items are combo items
+        else if (destination.GetItemOnCounter().GetType().Equals(typeof(ComboItem)) && itemInhand.GetType().Equals(typeof(ComboItem)))
         {
             ComboItem destinationCombo = (ComboItem) destination.GetItemOnCounter();
-            ComboItem incomingCombo = (ComboItem) incommingItem;
+            ComboItem incomingCombo = (ComboItem) itemInhand;
             destinationCombo.Combine(incomingCombo);
         }
     }
 
-    public void DropItem(Item itemToDrop)
-    {
-        SetLeftHandItem(null);
-        itemToDrop.OnDrop();
-        SwapItemRightToLeftHand();
-    }
-
+    // move an item from the right hand to the left hand
     public void SwapItemRightToLeftHand()
     {
         if (rightHandItem != null && leftHandItem == null)

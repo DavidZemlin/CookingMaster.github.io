@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// class for items that can be copped
 public class Chopable : Item
 {
+    // ---data members---
     public const float BERRIES_CHOP_TIME = 8;
     public const float CARROTS_CHOP_TIME = 8;
     public const float LETTUCE_CHOP_TIME = 10;

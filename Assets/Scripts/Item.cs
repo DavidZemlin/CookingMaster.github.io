@@ -1,12 +1,15 @@
-﻿using System.Collections;
+﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // base class for items that can be picked up by the player
 public abstract class Item : MonoBehaviour
 {
+    // ---data members---
     public enum ingredients
     {
+        empty, // used for combo slots that are empty
         berrie,
         carrots,
         lettuce,
@@ -15,16 +18,16 @@ public abstract class Item : MonoBehaviour
         tomato,
     }
 
-    [SerializeField] private Rigidbody rBody;
-    [SerializeField] private Collider itemCollider;
-    [SerializeField] private Vector3 placedFacing;
-    [SerializeField] private Vector3 heldFacing;
+    [SerializeField] private Rigidbody rBody;       // currently the rigidbody and collider are not used; here for future implementation
+    [SerializeField] private Collider itemCollider; // currently the rigidbody and collider are not used; here for future implementation
+
     private Transform itemTransform;
     private Vector3 initialScale;
 
-    // initialized any variable that are null
+    // ---unity methods---
     private void Awake()
     {
+        // initialized all variable
         initialScale = transform.localScale;
         if (rBody == null)
         {
@@ -37,23 +40,15 @@ public abstract class Item : MonoBehaviour
         itemTransform = transform;
     }
 
-    // call this whenever it is picked up
+    // ---primary methods---
+
+    // should be called whenever this item is picked up
     public void OnPickUp()
     {
         rBody.isKinematic = true;
         rBody.useGravity = false;
         itemCollider.enabled = false;
         itemTransform.localEulerAngles = Vector3.zero;
-    }
-
-    // call this whenever it is dropped (not placed)
-    public void OnDrop()
-    {
-        transform.parent = null;
-        transform.localScale = initialScale;
-        rBody.isKinematic = false;
-        rBody.useGravity = true;
-        itemCollider.enabled = true;
     }
 
     // call this when placing the item in/on something

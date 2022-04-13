@@ -34,5 +34,8 @@ Time Card
 4-8-22 22:30 - 00:00
 	finished basic interations
 	made 6 veggies!!!
+4-13-22 11:30 - 14:00
+	bug fixes, cleaning code, commenting
+	
 	
 	
