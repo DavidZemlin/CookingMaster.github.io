@@ -1,4 +1,11 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
+// ---------------------------------- serialized for debug
+// ---data members---
+// ---getters---
+// ---setters---
+// ---constructors---
+// ---unity methods---
+// ---primary methods---
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,9 +27,15 @@ public abstract class Item : MonoBehaviour
 
     [SerializeField] private Rigidbody rBody;       // currently the rigidbody and collider are not used; here for future implementation
     [SerializeField] private Collider itemCollider; // currently the rigidbody and collider are not used; here for future implementation
+    [SerializeField] private Counter currentCounter;
 
-    private Transform itemTransform;
     private Vector3 initialScale;
+
+    // ---getters---
+    public Counter GetCurrentCounter() { return currentCounter; }
+
+    // ---setters---
+    private void SetCurrentCounter(Counter newCounter) { currentCounter = newCounter; }
 
     // ---unity methods---
     private void Awake()
@@ -37,7 +50,6 @@ public abstract class Item : MonoBehaviour
         {
             itemCollider = gameObject.GetComponent<Collider>();
         }
-        itemTransform = transform;
     }
 
     // ---primary methods---
@@ -48,12 +60,14 @@ public abstract class Item : MonoBehaviour
         rBody.isKinematic = true;
         rBody.useGravity = false;
         itemCollider.enabled = false;
-        itemTransform.localEulerAngles = Vector3.zero;
+        SetCurrentCounter(null);
+        transform.localEulerAngles = Vector3.zero;
     }
 
     // call this when placing the item in/on something
-    public void OnPlace()
+    public void OnPlace(Counter counter)
     {
-        itemTransform.localEulerAngles = Vector3.zero;
+        SetCurrentCounter(counter);
+        transform.localEulerAngles = Vector3.zero;
     }
 }

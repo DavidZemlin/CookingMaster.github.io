@@ -11,7 +11,11 @@ public class HudController : MonoBehaviour
     // ---primary methods---
 
     // Flashes a full hands warning on the hud
-    public void FullHandsNotice()
+    public void NoticeFullHands(Player player)
+    {
+        // Future Feature
+    }
+    public void NoticeUnchopableItem(Player player)
     {
         // Future Feature
     }

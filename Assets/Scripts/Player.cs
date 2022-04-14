@@ -1,11 +1,4 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-// ---------------------------------- serialized for debug
-// ---data members---
-// ---getters---
-// ---setters---
-// ---constructors---
-// ---unity methods---
-// ---primary methods---
 using UnityEngine;
 
 // script for controllable player characters
@@ -15,6 +8,7 @@ public class Player : MonoBehaviour
     // ---data members---
     [SerializeField] private CharacterController characterController;
     [SerializeField] private ItemInteractor itemInteractor;
+    [SerializeField] private Animator animator;
     [SerializeField] private Transform leftHandSlot;
     [SerializeField] private Transform rightHandSlot;
     [SerializeField] [Range(1,2)] private int playerNumber = 1;
@@ -24,16 +18,20 @@ public class Player : MonoBehaviour
     private Quaternion toRotation;
     [SerializeField] private Item leftHandItem; // ---------------------------------- serialized for debug
     [SerializeField] private Item rightHandItem; // ---------------------------------- serialized for debug
-    [SerializeField] private float maxSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
-    [SerializeField] private float rotationSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
+
+    // these data member will be accessed directly, as they will be accesed at least every frame 
+    private bool controllable = true;
+    private bool moving;
+    private bool chopping;
     private float vert;
     private float hori;
-    private bool moving;
-    private bool pickUp;
-    private bool drop;
-    private bool chop;
+    [SerializeField] private float moveSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
+    [SerializeField] private float rotationSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
+    [SerializeField] private float choppingSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
+    [SerializeField] private Chopable choppingItem; // ---------------------------------- serialized for debug
 
     // ---getters---
+    public HudController GetHudController() { return hudController; }
     public Transform GetLeftHandSlot() { return leftHandSlot; }
     public Transform GetRightHandSlot() { return rightHandSlot; }
     public Item GetLeftHandItem() { return leftHandItem; }
@@ -59,6 +57,10 @@ public class Player : MonoBehaviour
         {
             itemInteractor = gameObject.GetComponentInChildren<ItemInteractor>();
         }
+        if (animator == null)
+        {
+            animator = gameObject.GetComponent<Animator>();
+        }
     }
 
     private void Update()
@@ -67,7 +69,7 @@ public class Player : MonoBehaviour
         moving = false;
 
         // read inputs for player 1
-        if(playerNumber == 1)
+        if(controllable && playerNumber == 1)
         {
             if (Input.GetButton("LeftP1"))
             {
@@ -120,7 +122,7 @@ public class Player : MonoBehaviour
         }
 
         // set movement vector
-        moveInput = new Vector3(hori * maxSpeed, 0.0f, vert * maxSpeed);
+        moveInput = new Vector3(hori * moveSpeed, 0.0f, vert * moveSpeed);
         characterController.SimpleMove(moveInput);
 
         // rotate character
@@ -131,6 +133,33 @@ public class Player : MonoBehaviour
         }
 
     }
+
+    
+    private void FixedUpdate()
+    {
+        // handle chopping loop. leave the loop after chopping time hits 0 and chopping item is set to null
+        if(chopping)
+        {
+            if (choppingItem != null)
+            {
+                float chopTimeLeft = choppingItem.GetChoppingTimeLeft();
+                if (chopTimeLeft > 0)
+                {
+                    choppingItem.SetChoppingTimeLeft(chopTimeLeft - choppingSpeed);
+                }
+                else
+                {
+                    choppingItem.ReplaceWithCombo();
+                    choppingItem = null;
+                }
+            }
+            else
+            {
+                StopChop();
+            }
+        }
+    }
+    
 
     // ---primary methods---
 
@@ -143,7 +172,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            hudController.FullHandsNotice();
+            hudController.NoticeFullHands(this);
             return false;
         }
     }
@@ -186,13 +215,17 @@ public class Player : MonoBehaviour
         Item leftHandItem = GetLeftHandItem();
         if (leftHandItem != null)
         {
-            Counter counter = itemInteractor.GetAppliance().gameObject.GetComponent<Counter>();
-            if (counter != null)
+            Appliance appliance = itemInteractor.GetAppliance();
+            if (appliance != null)
             {
-                Item itemOnCounter = counter.GetItemOnCounter();
-                if (itemOnCounter != null)
+                Counter counter = appliance.gameObject.GetComponent<Counter>();
+                if (counter != null)
                 {
-                    PlaceItem(counter, leftHandItem);
+                    Item itemOnCounter = counter.GetItemOnCounter();
+                    if (itemOnCounter == null)
+                    {
+                        PlaceItem(counter, leftHandItem);
+                    }
                 }
             }
         }
@@ -214,10 +247,7 @@ public class Player : MonoBehaviour
     // use an appliance
     public void useAppliance(Appliance appliance)
     {
-        if (appliance != null)
-        {
-            appliance.Use(this);
-        }
+        appliance.Use(this);
     }
 
     // pick up an item
@@ -267,5 +297,23 @@ public class Player : MonoBehaviour
             PickUpItem(rightHandItem);
             SetRightHandItem(null);
         }
+    }
+
+    // start chopping
+    public void StartChop(Chopable chopItem)
+    {
+        controllable = false;
+        chopping = true;
+        animator.SetBool("chopping", true);
+        choppingItem = chopItem;
+    }
+
+    // stop the chop!
+    public void StopChop()
+    {
+        choppingItem = null;
+        animator.SetBool("chopping", false);
+        chopping = false;
+        controllable = true;
     }
 }

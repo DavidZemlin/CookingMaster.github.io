@@ -3,19 +3,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// this appliance is the basic ingredient container, when used by the play provides
-//      an infinite amount of a type of ingredient (one item at a time)
-public class Crate : Appliance
+// this is a special type of crate that can dispense plates or combos
+public class ComboCrate : Crate
 {
     // ---data members---
-    [SerializeField] protected GameObject contents;
+    [SerializeField] private Item.ingredients[] plateContents = new Item.ingredients[ComboItem.MAX_COMBO];
 
     // ---primary methods---
     public override void Use(Player usingPlayer)
     {
+
         GameObject newItem = Instantiate(contents);
         newItem.transform.localPosition = Vector3.zero;
-        Item newItemScript = newItem.GetComponent<Item>();
+        ComboItem newItemScript = newItem.GetComponent<ComboItem>();
         usingPlayer.PickUpItem(newItemScript);
+        newItemScript.SetPlate(true);
+        for (int i = 0; i < plateContents.Length; i++)
+        {
+            newItemScript.SetContents(i, plateContents[i]);
+        }
     }
 }

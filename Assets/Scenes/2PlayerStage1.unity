@@ -856,6 +856,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rBody: {fileID: 0}
   itemCollider: {fileID: 0}
+  currentCounter: {fileID: 0}
 --- !u!4 &91237017
 Transform:
   m_ObjectHideFlags: 0
@@ -2284,13 +2285,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 271172345}
   itemInteractor: {fileID: 1379618066}
+  animator: {fileID: 0}
   leftHandSlot: {fileID: 1325685156}
   rightHandSlot: {fileID: 1771527953}
   playerNumber: 1
   leftHandItem: {fileID: 0}
   rightHandItem: {fileID: 0}
-  maxSpeed: 4
+  moveSpeed: 0
   rotationSpeed: 1000
+  choppingSpeed: 0
+  choppingItem: {fileID: 0}
 --- !u!95 &271172348
 Animator:
   serializedVersion: 3

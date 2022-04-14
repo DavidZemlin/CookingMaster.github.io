@@ -29,7 +29,7 @@ public class Counter : Appliance
             SetItemOnCounter(item);
             item.transform.parent = GetItemSlot();
             item.transform.localPosition = Vector3.zero;
-            item.OnPlace();
+            item.OnPlace(this);
         }
     }
 
