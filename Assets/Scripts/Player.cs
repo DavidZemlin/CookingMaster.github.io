@@ -6,13 +6,18 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // ---data members---
+    private const int SOUND_CLIP_2_CHANCE = 10;
+
     [SerializeField] private CharacterController characterController;
     [SerializeField] private ItemInteractor itemInteractor;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioSource sounder;
+    [SerializeField] private AudioClip[] chopSounds;
     [SerializeField] private Transform leftHandSlot;
     [SerializeField] private Transform rightHandSlot;
     [SerializeField] [Range(1,2)] private int playerNumber = 1;
 
+    private GameData gameData;
     private HudController hudController;
     private Vector3 moveInput;
     private Quaternion toRotation;
@@ -25,6 +30,8 @@ public class Player : MonoBehaviour
     private bool chopping;
     private float vert;
     private float hori;
+    private float soundEffectNextPlayTime;
+    [SerializeField] private float soundEffectDelay; // ---------------------------------- serialized for debug <--- make consts for default speeds
     [SerializeField] private float moveSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
     [SerializeField] private float rotationSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
     [SerializeField] private float choppingSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
@@ -45,6 +52,10 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         // Initialize null variables
+        if (gameData == null)
+        {
+            gameData = GameObject.FindGameObjectWithTag("GameData").GetComponent<GameData>();
+        }
         if (hudController == null)
         {
             hudController = GameObject.FindGameObjectWithTag("HUD").GetComponent<HudController>();
@@ -61,6 +72,11 @@ public class Player : MonoBehaviour
         {
             animator = gameObject.GetComponent<Animator>();
         }
+        if (sounder == null)
+        {
+            sounder = gameObject.GetComponent<AudioSource>();
+        }
+        //sounder.volume = gameData.GetSoundVolume();
     }
 
     private void Update()
@@ -140,6 +156,19 @@ public class Player : MonoBehaviour
         // handle chopping loop. leave the loop after chopping time hits 0 and chopping item is set to null
         if(chopping)
         {
+            if (soundEffectNextPlayTime < Time.time)
+            {
+                if (Random.Range(1, 101) < SOUND_CLIP_2_CHANCE)
+                {
+                    sounder.clip = chopSounds[1];
+                }
+                else
+                {
+                    sounder.clip = chopSounds[0];
+                }
+                sounder.Play();
+                soundEffectNextPlayTime = Time.time + soundEffectDelay;
+            }
             if (choppingItem != null)
             {
                 float chopTimeLeft = choppingItem.GetChoppingTimeLeft();

@@ -15,7 +15,7 @@ public class GameData : MonoBehaviour
     private const string SAVE_FILE_NAME = "save.dat";
     private const int DEFAULT_VOLUME = 100;
 
-    [SerializeField] private GameController gameController;
+    private GameController gameController;
     [SerializeField] private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES]; // ---------------------------------- serialized for debug
     [SerializeField] private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES]; // ---------------------------------- serialized for debug
     private string player1Name = DEFAULT_NAME;
@@ -38,19 +38,26 @@ public class GameData : MonoBehaviour
     public void SetPlayer2Name(string newName) { player2Name = newName; }
     public void SetMusicVolume(int newVolume) { musicVolume = newVolume; }
     public void SetSoundVolume(int newVolume) { soundVolume = newVolume; }
+    private void SetGameController(GameController newGameController) { gameController = newGameController; }
 
-    // ---unity methods---
-    private void Awake()
+    // ---primary methods---
+
+    // used instead of "awake"
+    public void Initialize(GameController controller)
     {
         // mark game data object as "don't destroy"
         DontDestroyOnLoad(gameObject);
 
-        // if game controller has not been assigned, find it and assign it
-        if (gameController == null)
-        {
-            GameObject gameControllObj = GameObject.FindGameObjectWithTag("GameController");
-            gameController = gameControllObj.GetComponent<GameController>();
-        }
+        // Initialize game controller references
+        SetGameController(controller);
+
+        // initialize player names;
+        SetPlayer1Name(DEFAULT_NAME + " 1");
+        SetPlayer2Name(DEFAULT_NAME + " 2");
+
+        // initialize volume levels;
+        SetMusicVolume(DEFAULT_VOLUME);
+        SetSoundVolume(DEFAULT_VOLUME);
 
         // initialize high score lists;
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
@@ -64,12 +71,7 @@ public class GameData : MonoBehaviour
 
         // load data if there is any
         loadGameData();
-
-        // tell the game controller to continue out of startup phase
-        gameController.LoadMainMenu();
     }
-
-    // ---primary methods---
 
     // saves all game data that is meant to persist between game session.
     //      first this function packs all data into a list of strings

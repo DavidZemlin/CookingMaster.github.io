@@ -13,7 +13,8 @@ Pink = Berries
 
 To-Do
 =====================
-
+Stage Controller (set up proper initiailization order in stages)
+Combine choped ingredients
 
 Time Card
 =====================
@@ -36,6 +37,7 @@ Time Card
 	made 6 veggies!!!
 4-13-22 11:30 - 14:00
 	bug fixes, cleaning code, commenting
-	
+4-13-22 16:00 - 2:00
+	implementation of chopping, music, sound, plates, better encapsulation, name select menu
 	
 	
