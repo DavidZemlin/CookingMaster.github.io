@@ -186,8 +186,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595e9799802a2b94281d7713fca26f15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rBody: {fileID: 0}
-  itemCollider: {fileID: 0}
+  rBody: {fileID: 827156021822903713}
+  itemCollider: {fileID: 466193530959407776}
   currentCounter: {fileID: 0}
   ingredientType: 2
   choppedPrefab: {fileID: 34432789264037093, guid: 9f93f5d077c620a4393023a90d665314,

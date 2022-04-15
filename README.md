@@ -13,7 +13,6 @@ Pink = Berries
 
 To-Do
 =====================
-Stage Controller (set up proper initiailization order in stages)
 Combine choped ingredients
 
 Time Card
@@ -39,5 +38,6 @@ Time Card
 	bug fixes, cleaning code, commenting
 4-13-22 16:00 - 2:00
 	implementation of chopping, music, sound, plates, better encapsulation, name select menu
-	
+4-14-22 21:00 - 23:00
+	Made stage loader, fixed sound leves, fixed some encapsulation issues
 	

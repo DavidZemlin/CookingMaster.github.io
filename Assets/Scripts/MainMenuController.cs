@@ -18,7 +18,11 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private AudioSource soundTester;
 
     private GameController gameController;
-    private GameData gameData;
+    private AudioSource musicPlayer;
+
+    // ---setters---
+    private void SetGameController(GameController gameCont) { gameController = gameCont; }
+    private void SetMusicPlayer(AudioSource audioScource) { musicPlayer = audioScource; }
 
     // ---getters---
     private TMP_Text[] GetHighScoreText() { return highScoreText; }
@@ -28,15 +32,20 @@ public class MainMenuController : MonoBehaviour
     private Slider GetMusicSlider() { return musicSlider; }
     private Slider GetSoundSlider() { return soundSlider; }
     private AudioSource GetSoundTester() { return soundTester; }
+    private AudioSource GetMusicPlayer() { return musicPlayer; }
 
     // ---primary methods---
 
     // used instead of "awake"
-    public void Initialize(GameData data, GameController controller)
+    public void Initialize(GameController controller)
     {
         // initialize variables
-        gameController = controller;
-        gameData = data;
+        SetGameController(controller);
+        SetMusicPlayer(gameObject.GetComponent<AudioSource>());
+
+        // start  music
+        AdjustMusicVolume();
+        GetMusicPlayer().Play();
     }
 
     // menu call to start a 1 player game
@@ -54,8 +63,8 @@ public class MainMenuController : MonoBehaviour
     // update the text of high score display to match the current data
     public void UpdateHighScores()
     {
-        HighScore[] highScores = gameData.GetHighScore();
-        HighScore[] highScores2Player = gameData.GetHighScore2Player();
+        HighScore[] highScores = gameController.GetGameData().GetHighScore();
+        HighScore[] highScores2Player = gameController.GetGameData().GetHighScore2Player();
         for (int i = 0; i < highScores.Length; i++)
         {
             GetHighScoreText()[i].SetText(highScores[i].getName() + " : " + highScores[i].getScore().ToString());
@@ -69,51 +78,57 @@ public class MainMenuController : MonoBehaviour
     // change player 1 name
     public void ChangePlayer1Name()
     {
-        gameData.SetPlayer1Name(GetPlayer1Name().textComponent.text);
+        gameController.GetGameData().SetPlayer1Name(GetPlayer1Name().textComponent.text);
     }
 
     // change player 2 name
     public void ChangePlayer2Name()
     {
-        gameData.SetPlayer2Name(GetPlayer2Name().textComponent.text);
+        gameController.GetGameData().SetPlayer2Name(GetPlayer2Name().textComponent.text);
     }
 
     // change the music volume setting in game data
     public void ChangeMusicVolume()
     {
-        gameData.SetMusicVolume((int) GetMusicSlider().value);
-        gameController.AdjustMusicVolume();
+        gameController.GetGameData().SetMusicVolume((int) GetMusicSlider().value);
+        AdjustMusicVolume();
     }
 
     // change the sound volume setting in game data
     public void ChangeSoundVolume()
     {
-        gameData.SetSoundVolume((int) GetSoundSlider().value);
-        soundTester.volume = ((float)gameData.GetSoundVolume() / 100.0f);
+        gameController.GetGameData().SetSoundVolume((int) GetSoundSlider().value);
+        soundTester.volume = ((float) gameController.GetGameData().GetSoundVolume() / 100.0f);
         soundTester.Play();
     }
 
     // read player 1 name into input field
     public void ReadPlayer1Name()
     {
-        GetPlayer1Name().SetTextWithoutNotify(gameData.GetPlayer1Name());
+        GetPlayer1Name().SetTextWithoutNotify(gameController.GetGameData().GetPlayer1Name());
     }
 
     // read player 2 name into input field
     public void ReadPlayer2Name()
     {
-        GetPlayer2Name().SetTextWithoutNotify(gameData.GetPlayer2Name());
+        GetPlayer2Name().SetTextWithoutNotify(gameController.GetGameData().GetPlayer2Name());
     }
 
     // update music volume slider to show the current volume setting in the game data
     public void ReadMusicVolume()
     {
-        GetMusicSlider().SetValueWithoutNotify(gameData.GetMusicVolume());
+        GetMusicSlider().SetValueWithoutNotify(gameController.GetGameData().GetMusicVolume());
     }
 
     // update sound volume slider to show the current volume setting in the game data
     public void ReadSoundVolume()
     {
-        GetSoundSlider().SetValueWithoutNotify(gameData.GetSoundVolume());
+        GetSoundSlider().SetValueWithoutNotify(gameController.GetGameData().GetSoundVolume());
+    }
+
+    // updates the music volume to the current level
+    private void AdjustMusicVolume()
+    {
+        GetMusicPlayer().volume = ((float)gameController.GetGameData().GetMusicVolume() / 100.0f);
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // ---data members---
-    private const int SOUND_CLIP_2_CHANCE = 10;
+    private const int SOUND_CLIP_2_CHANCE = 15;
 
     [SerializeField] private CharacterController characterController;
     [SerializeField] private ItemInteractor itemInteractor;
@@ -17,14 +17,14 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform rightHandSlot;
     [SerializeField] [Range(1,2)] private int playerNumber = 1;
 
-    private GameData gameData;
+    private StageController stageController;
     private HudController hudController;
     private Vector3 moveInput;
     private Quaternion toRotation;
     [SerializeField] private Item leftHandItem; // ---------------------------------- serialized for debug
     [SerializeField] private Item rightHandItem; // ---------------------------------- serialized for debug
 
-    // these data member will be accessed directly, as they will be accesed at least every frame 
+    // these data member will be accessed directly, as they will be accessed at least every frame
     private bool controllable = true;
     private bool moving;
     private bool chopping;
@@ -48,36 +48,10 @@ public class Player : MonoBehaviour
     public void SetLeftHandItem(Item newItem) { leftHandItem = newItem; }
     public void SetRightHandItem(Item newItem) { rightHandItem = newItem; }
 
+    private void SetHudController(HudController hud) { hudController = hud; }
+    private void SetStageController(StageController stageCont) { stageController = stageCont; }
+
     // ---unity methods---
-    private void Awake()
-    {
-        // Initialize null variables
-        if (gameData == null)
-        {
-            gameData = GameObject.FindGameObjectWithTag("GameData").GetComponent<GameData>();
-        }
-        if (hudController == null)
-        {
-            hudController = GameObject.FindGameObjectWithTag("HUD").GetComponent<HudController>();
-        }
-        if (characterController == null)
-        {
-            characterController = gameObject.GetComponent<CharacterController>();
-        }
-        if (itemInteractor == null)
-        {
-            itemInteractor = gameObject.GetComponentInChildren<ItemInteractor>();
-        }
-        if (animator == null)
-        {
-            animator = gameObject.GetComponent<Animator>();
-        }
-        if (sounder == null)
-        {
-            sounder = gameObject.GetComponent<AudioSource>();
-        }
-        //sounder.volume = gameData.GetSoundVolume();
-    }
 
     private void Update()
     {
@@ -150,7 +124,6 @@ public class Player : MonoBehaviour
 
     }
 
-    
     private void FixedUpdate()
     {
         // handle chopping loop. leave the loop after chopping time hits 0 and chopping item is set to null
@@ -188,9 +161,16 @@ public class Player : MonoBehaviour
             }
         }
     }
-    
 
     // ---primary methods---
+
+    // used instead of "awake"
+    public void Initialize(StageController stageCont, HudController hudCont)
+    {
+        // Initialize null variables
+        SetStageController(stageCont);
+        SetHudController(hudCont);
+    }
 
     // check if the player has an open hand
     public bool HasOpenHand()

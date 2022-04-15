@@ -34,6 +34,8 @@ public class SceneStarter : MonoBehaviour
     private void SetGameController(GameController newGameController) { gameController = newGameController; }
     private void SetGameData(GameData newGameData) { gameData = newGameData; }
 
+    // ---unity methods---
+
     private void Awake()
     {
         // check if there is another scene starter first, if so, then this one will self destruct
@@ -63,18 +65,33 @@ public class SceneStarter : MonoBehaviour
             gameData.Initialize(GetGameController());
             gameController.Initialize(GetGameData());
 
-            // start initialization process for the appropriate stage.
-            //      default means it is a stage being loaded
-            switch (SceneManager.GetActiveScene().name)
-            {
-                case "MainMenu":
-                    GameObject mainMenuContObj = GameObject.Find("Main Menu Controller");
-                    mainMenuContObj.GetComponent<MainMenuController>().Initialize(GetGameData(), GetGameController());
-                    break;
-                default:
-                    GameObject stageContObj = GameObject.Find("Stage Controller");
-                    break;
-            }
+            // start scene initialization
+            InitializeScene();
+        }
+    }
+
+    private void OnLevelWasLoaded()
+    {
+        // start scene initialization
+        InitializeScene();
+    }
+
+    // ---primary methods---
+
+    // start initialization process for the appropriate scene.
+    //      default means it is a stage being loaded
+    private void InitializeScene()
+    {
+        switch (SceneManager.GetActiveScene().name)
+        {
+            case "MainMenu":
+                GameObject mainMenuContObj = GameObject.Find("Main Menu Controller");
+                mainMenuContObj.GetComponent<MainMenuController>().Initialize(GetGameController());
+                break;
+            default:
+                GameObject stageContObj = GameObject.Find("Stage Controller");
+                stageContObj.GetComponent<StageController>().Initialize(GetGameController());
+                break;
         }
     }
 }

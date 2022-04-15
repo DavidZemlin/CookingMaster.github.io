@@ -9,6 +9,8 @@ TagManager:
   - Appliance
   - HUD
   - SceneStarter
+  - Stage Controller
+  - Player2
   layers:
   - Default
   - TransparentFX
