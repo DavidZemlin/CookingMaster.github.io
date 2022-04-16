@@ -8,7 +8,7 @@ public class ComboCrate : Crate
 {
     // ---data members---
     [SerializeField] bool hasPlate = false;
-    [SerializeField] private Item.ingredients[] plateContents = new Item.ingredients[ComboItem.MAX_COMBO];
+    [SerializeField] private Item.ingredients[] plateContents = new Item.ingredients[ItemStats.MAX_COMBO];
 
     // ---getters---
     private bool GetHasPlate() { return hasPlate; }

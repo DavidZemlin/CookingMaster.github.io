@@ -7,6 +7,8 @@ using UnityEngine;
 public static class ItemStats
 {
     public const int UNCHOPPED_INGREDIENT_DIVISOR = 2; // amount to divide the score by for unchopped items
+    public const int MAX_COMBO = 3;
+
     // scores
     public const int SCORE_PLATE = 5;
     public const int SCORE_BERRY = 8;

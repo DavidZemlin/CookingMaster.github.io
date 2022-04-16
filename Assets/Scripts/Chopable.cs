@@ -76,6 +76,7 @@ public class Chopable : Item
         location.receiveItem(choppedItem.GetComponent<Item>());
         ComboItem comboScript = choppedItem.GetComponent<ComboItem>();
         comboScript.SetContents(0, ingredientType);
+        comboScript.UpdateCombo();
 
         Destroy(gameObject);
         GetCuttingBoard().ShiftCurrentItemToSideBoard();

@@ -15,22 +15,22 @@ using UnityEngine;
 public class ComboItem : Item
 {
     // ---data members---
-    public const int MAX_COMBO = 3;
-
+    [SerializeField] private DishTag dishTag;
     [SerializeField] private GameObject[] ingrediantModels; // model 0 = plate. the rest will match this indexing of the ingredients enum
-    [SerializeField] private Transform[] ingrediantModelSlots = new Transform[MAX_COMBO];
+    [SerializeField] private Transform[] ingrediantModelSlots = new Transform[ItemStats.MAX_COMBO];
     [SerializeField] private Transform plateModelSlot;
 
     private bool plate;
-    private ingredients[] contents = new ingredients[MAX_COMBO];
+    private ingredients[] contents = new ingredients[ItemStats.MAX_COMBO];
 
     // ---getters---
     public bool GetPlate() { return plate; }
     public ingredients[] GetContents() {return contents; }
+    private DishTag GetDishTag() { return dishTag; }
 
     // ---setters---
     public void SetPlate(bool hasPlate) { plate = hasPlate; }
-    public void SetContents(int index, ingredients ingredient) { contents[index] = ingredient; UpdateCombo(); }
+    public void SetContents(int index, ingredients ingredient) { contents[index] = ingredient; }
 
     // ---unity methods---
     private void Awake()
@@ -38,8 +38,15 @@ public class ComboItem : Item
         for (int i = 0; i < contents.Length; i++)
         {
             SetContents(i, ingredients.empty);
+            UpdateCombo();
         }
     }
+
+    private void Update()
+    {
+        dishTag.transform.eulerAngles = Vector3.zero;
+    }
+
     // ---primary methods---
 
     // combine this item with another combo item
@@ -52,7 +59,7 @@ public class ComboItem : Item
             SetPlate(true);
         }
 
-        for (int i = 0; i < MAX_COMBO; i++)
+        for (int i = 0; i < ItemStats.MAX_COMBO; i++)
         {
             if(contents[i] == ingredients.empty)
             {
@@ -127,7 +134,7 @@ public class ComboItem : Item
             SetScore(GetScore() + ItemStats.SCORE_PLATE);
         }
 
-        for (int i = 0; i < MAX_COMBO; i++)
+        for (int i = 0; i < ItemStats.MAX_COMBO; i++)
         {
             ingredients ingredient = GetContents()[i];
             if (ingredient == ingredients.berrie)
@@ -161,17 +168,19 @@ public class ComboItem : Item
                 SetScore(GetScore() + ItemStats.SCORE_TOMATO);
             }
         }
+
+        GetDishTag().ChangeTag(GetContents());
     }
 
     // remove first ingredient and shift the other ingredients forward on the list
     public ingredients RemoveIngredient()
     {
         ingredients ingredientToRemove = GetContents()[0];
-        for(int i = 0; i < MAX_COMBO - 1; i++)
+        for(int i = 0; i < ItemStats.MAX_COMBO - 1; i++)
         {
             SetContents(i, GetContents()[i + 1]);
         }
-        SetContents(MAX_COMBO - 1, ingredients.empty);
+        SetContents(ItemStats.MAX_COMBO - 1, ingredients.empty);
         return ingredientToRemove;
     }
 
