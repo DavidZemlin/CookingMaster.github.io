@@ -32,7 +32,7 @@ public class ComboItem : Item
 
     // ---getters---
     public bool GetPlate() { return plate; }
-    public ingredients GetContents(int index) { return contents[index]; }
+    public ingredients[] GetContents() {return contents; }
 
     // ---setters---
     public void SetPlate(bool hasPlate) { plate = hasPlate; }
@@ -51,7 +51,62 @@ public class ComboItem : Item
     // combine this item with another combo item
     public void Combine(ComboItem incomingItem)
     {
+        Debug.Log("Combine!!!");
+        if (incomingItem.GetPlate() && !GetPlate())
+        {
+            incomingItem.SetPlate(false);
+            SetPlate(true);
+        }
 
+        for (int i = 0; i < MAX_COMBO; i++)
+        {
+            if(contents[i] == ingredients.empty)
+            {
+                contents[i] = incomingItem.RemoveIngredient();
+            }
+        }
+        UpdateComboModel();
+        if(incomingItem.isEmptyComboItem())
+        {
+            Player holdingPlayer = incomingItem.GetHoldingPlayer();
+            Counter currentCounter = incomingItem.GetCurrentCounter();
+            if (holdingPlayer != null)
+            {
+                incomingItem.GetHoldingPlayer().DestroyItemInLeftHand();
+            }
+            if (currentCounter != null)
+            {
+                currentCounter.RemoveItem();
+                incomingItem.DestroyItem();
+            }
+
+        }
+        else
+        {
+            incomingItem.UpdateComboModel();
+        }
+
+    }
+
+    // check if combo is empty
+    public bool isEmptyComboItem()
+    {
+        bool empty = true;
+        if (GetPlate())
+        {
+            empty = false;
+        }
+        else
+        {
+            foreach (Item.ingredients i in GetContents())
+            {
+                if (i != Item.ingredients.empty)
+                {
+                    empty = false;
+                }
+            }
+        }
+        return empty;
     }
 
     // update the appearance of the combined food item
@@ -60,6 +115,13 @@ public class ComboItem : Item
         if (plate)
         {
             SpawnModel(plateModelSlot, 0);
+        }
+        else if (plateModelSlot.childCount > 0)
+        {
+            foreach (Transform t in plateModelSlot)
+            {
+                Destroy(t.gameObject);
+            }
         }
         foreach(Transform t in ingrediantModelSlots)
         {
@@ -71,12 +133,24 @@ public class ComboItem : Item
 
         for (int i = 0; i < MAX_COMBO; i++)
         {
-            ingredients ingredient = GetContents(i);
+            ingredients ingredient = GetContents()[i];
             if (ingredient != ingredients.empty)
             {
                 SpawnModel(ingrediantModelSlots[i], (int) ingredient);
             }
         }
+    }
+
+    // remove first ingredient and shift the other ingredients forward on the list
+    public ingredients RemoveIngredient()
+    {
+        ingredients ingredientToRemove = GetContents()[0];
+        for(int i = 0; i < MAX_COMBO - 1; i++)
+        {
+            SetContents(i, GetContents()[i + 1]);
+        }
+        SetContents(MAX_COMBO - 1, ingredients.empty);
+        return ingredientToRemove;
     }
 
     // helper method to spawn models for different parts of the combo

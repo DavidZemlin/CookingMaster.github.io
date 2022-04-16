@@ -30,12 +30,15 @@ public abstract class Item : MonoBehaviour
     [SerializeField] private Counter currentCounter;
 
     private Vector3 initialScale;
+    private Player holdingPlayer;
 
     // ---getters---
     public Counter GetCurrentCounter() { return currentCounter; }
+    public Player GetHoldingPlayer() { return holdingPlayer; }
 
     // ---setters---
     private void SetCurrentCounter(Counter newCounter) { currentCounter = newCounter; }
+    private void SetHoldingPlayer(Player newHoldingPlayer) { holdingPlayer = newHoldingPlayer; }
 
     // ---unity methods---
     private void Awake()
@@ -55,13 +58,14 @@ public abstract class Item : MonoBehaviour
     // ---primary methods---
 
     // should be called whenever this item is picked up
-    public void OnPickUp()
+    public void OnPickUp(Player player)
     {
         rBody.isKinematic = true;
         rBody.useGravity = false;
         itemCollider.enabled = false;
         SetCurrentCounter(null);
         transform.localEulerAngles = Vector3.zero;
+        SetHoldingPlayer(player);
     }
 
     // call this when placing the item in/on something
@@ -69,5 +73,17 @@ public abstract class Item : MonoBehaviour
     {
         SetCurrentCounter(counter);
         transform.localEulerAngles = Vector3.zero;
+        SetHoldingPlayer(null);
+    }
+
+    // destroys this item
+    public void DestroyItem()
+    {
+        Counter counter = GetCurrentCounter();
+        if (counter != null && currentCounter.GetItemOnCounter() == this)
+        {
+            counter.RemoveItem();
+        }
+        Destroy(gameObject);
     }
 }

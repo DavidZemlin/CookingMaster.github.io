@@ -42,19 +42,21 @@ public class StageController : MonoBehaviour
         GameObject player1Obj = GameObject.FindGameObjectWithTag("Player");
         GameObject player2Obj = GameObject.FindGameObjectWithTag("Player2");
 
-        if(player1 != null)
+        if(player1Obj != null)
         {
-            // Initialize Player 2
-            player1.GetComponent<Player>().Initialize(this, GetHudController());
+            // Initialize Player 1
+            player1 = player1Obj.GetComponent<Player>();
+            player1.Initialize(this, GetHudController());
         }
         else
         {
-            Debug.Log("Player one is missing! stop the show! Check his trailer!");
+            Debug.Log("Player 1 is missing! stop the show! Check his trailer!");
         }
-        if (player2 != null)
+        if (player2Obj != null)
         {
             // Initialize Player 2
-            player2.GetComponent<Player>().Initialize(this, GetHudController());
+            player2 = player2Obj.GetComponent<Player>();
+            player2.Initialize(this, GetHudController());
         }
         else
         {

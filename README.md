@@ -13,7 +13,10 @@ Pink = Berries
 
 To-Do
 =====================
-Combine choped ingredients
+Trash can
+customers
+Hud
+
 
 Time Card
 =====================
@@ -37,7 +40,18 @@ Time Card
 4-13-22 11:30 - 14:00
 	bug fixes, cleaning code, commenting
 4-13-22 16:00 - 2:00
-	implementation of chopping, music, sound, plates, better encapsulation, name select menu
+	implementation of chopping
+	music
+	sound
+	plates
+	better encapsulation
+	name select menu
 4-14-22 21:00 - 23:00
-	Made stage loader, fixed sound leves, fixed some encapsulation issues
+	Made stage loader
+	fixed sound leves
+	fixed some encapsulation issues
+4-15-22 18:15
+	Item combonation implemented
+	auto combine from cuttingboard implemented
+	minor fixes
 	

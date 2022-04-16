@@ -25,12 +25,15 @@ public class Chopable : Item
     [SerializeField] private ingredients ingredientType;
     [SerializeField] private GameObject choppedPrefab;
 
+    private CuttingBoard cuttingboard;
     private float choppingTimeLeft;
 
     // ---getters---
+    public CuttingBoard GetCuttingBoard() { return cuttingboard; }
     public float GetChoppingTimeLeft() { return choppingTimeLeft; }
 
     // ---setters---
+    public void SetCuttingBoard(CuttingBoard newCuttingBoard) { cuttingboard = newCuttingBoard; }
     public void SetChoppingTimeLeft(float chopTime) { choppingTimeLeft = chopTime; }
 
     // ---unity methods---
@@ -76,5 +79,6 @@ public class Chopable : Item
         comboScript.SetContents(0, ingredientType);
 
         Destroy(gameObject);
+        GetCuttingBoard().ShiftCurrentItemToSideBoard();
     }
 }

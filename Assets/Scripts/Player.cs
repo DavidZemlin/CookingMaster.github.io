@@ -235,6 +235,10 @@ public class Player : MonoBehaviour
                     {
                         PlaceItem(counter, leftHandItem);
                     }
+                    else if (itemOnCounter.GetType().Equals(typeof(ComboItem)) && leftHandItem.GetType().Equals(typeof(ComboItem)))
+                    {
+                        CombineItems(counter, leftHandItem);
+                    }
                 }
             }
         }
@@ -273,7 +277,7 @@ public class Player : MonoBehaviour
             openHand = GetRightHandSlot();
             SetRightHandItem(item);
         }
-        item.OnPickUp();
+        item.OnPickUp(this);
         item.transform.parent = openHand;
         item.transform.localPosition = Vector3.zero;
     }
@@ -281,21 +285,28 @@ public class Player : MonoBehaviour
     // place/drop an item
     public void PlaceItem(Counter destination, Item itemInhand)
     {
-        // if counter is empty, place the item
-        if (destination.GetItemOnCounter() == null)
-        {
-            itemInhand.transform.SetParent(null);
-            SetLeftHandItem(null);
-            destination.recieveItem(itemInhand);
-            SwapItemRightToLeftHand();
-        }
-        // if the counter has an item on it, attempt to combine the items if both items are combo items
-        else if (destination.GetItemOnCounter().GetType().Equals(typeof(ComboItem)) && itemInhand.GetType().Equals(typeof(ComboItem)))
-        {
-            ComboItem destinationCombo = (ComboItem) destination.GetItemOnCounter();
-            ComboItem incomingCombo = (ComboItem) itemInhand;
-            destinationCombo.Combine(incomingCombo);
-        }
+        // place the item on a counter
+        itemInhand.transform.SetParent(null);
+        SetLeftHandItem(null);
+        destination.recieveItem(itemInhand);
+        SwapItemRightToLeftHand();
+    }
+
+    // combine items
+    public void CombineItems(Counter destination, Item itemInhand)
+    {
+        // combine counter combine item with the one being held
+        ComboItem destinationCombo = (ComboItem)destination.GetItemOnCounter();
+        ComboItem incomingCombo = (ComboItem)itemInhand;
+        destinationCombo.Combine(incomingCombo);
+    }
+
+    // destroy item in players left hand
+    public void DestroyItemInLeftHand()
+    {
+        GetLeftHandItem().DestroyItem();
+        SetLeftHandItem(null);
+        SwapItemRightToLeftHand();
     }
 
     // move an item from the right hand to the left hand
@@ -320,7 +331,6 @@ public class Player : MonoBehaviour
     // stop the chop!
     public void StopChop()
     {
-        choppingItem = null;
         animator.SetBool("chopping", false);
         chopping = false;
         controllable = true;

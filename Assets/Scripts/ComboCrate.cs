@@ -7,20 +7,38 @@ using UnityEngine;
 public class ComboCrate : Crate
 {
     // ---data members---
+    [SerializeField] bool hasPlate = false;
     [SerializeField] private Item.ingredients[] plateContents = new Item.ingredients[ComboItem.MAX_COMBO];
 
+    // ---getters---
+    private bool GetHasPlate() { return hasPlate; }
+    public Item.ingredients[] GetPlateContents() { return plateContents; } 
+
     // ---primary methods---
+
+    // create a combo item and give it to the player
     public override void Use(Player usingPlayer)
     {
-
-        GameObject newItem = Instantiate(contents);
-        newItem.transform.localPosition = Vector3.zero;
-        ComboItem newItemScript = newItem.GetComponent<ComboItem>();
-        usingPlayer.PickUpItem(newItemScript);
-        newItemScript.SetPlate(true);
-        for (int i = 0; i < plateContents.Length; i++)
+        bool hasIngredients = false;
+        foreach (Item.ingredients i in GetPlateContents())
         {
-            newItemScript.SetContents(i, plateContents[i]);
+            if(i != Item.ingredients.empty)
+            {
+                hasIngredients = true;
+            }
+        }
+
+        if (hasIngredients || GetHasPlate())
+        {
+            GameObject newItem = Instantiate(contents);
+            newItem.transform.localPosition = Vector3.zero;
+            ComboItem newItemScript = newItem.GetComponent<ComboItem>();
+            usingPlayer.PickUpItem(newItemScript);
+            newItemScript.SetPlate(GetHasPlate());
+            for (int i = 0; i < GetPlateContents().Length; i++)
+            {
+                newItemScript.SetContents(i, GetPlateContents()[i]);
+            }
         }
     }
 }
