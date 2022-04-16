@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     public Transform GetRightHandSlot() { return rightHandSlot; }
     public Item GetLeftHandItem() { return leftHandItem; }
     public Item GetRightHandItem() { return rightHandItem; }
+    public int GetPlayerNumber() { return playerNumber; }
 
     // ---setters---
     public void SetLeftHandItem(Item newItem) { leftHandItem = newItem; }
@@ -50,7 +51,6 @@ public class Player : MonoBehaviour
 
     private void SetHudController(HudController hud) { hudController = hud; }
     private void SetStageController(StageController stageCont) { stageController = stageCont; }
-
     // ---unity methods---
 
     private void Update()
@@ -288,7 +288,7 @@ public class Player : MonoBehaviour
         // place the item on a counter
         itemInhand.transform.SetParent(null);
         SetLeftHandItem(null);
-        destination.recieveItem(itemInhand);
+        destination.receiveItem(itemInhand);
         SwapItemRightToLeftHand();
     }
 

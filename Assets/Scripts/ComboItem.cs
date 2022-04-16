@@ -16,12 +16,6 @@ public class ComboItem : Item
 {
     // ---data members---
     public const int MAX_COMBO = 3;
-    public const int BERRIES_SCORE = 8;
-    public const int CARROTS_SCORE = 8;
-    public const int LETTUCE_SCORE = 10;
-    public const int RED_CABBAGE_SCORE = 7;
-    public const int SQUASH_SCORE = 5;
-    public const int TOMATO_SCORE = 6;
 
     [SerializeField] private GameObject[] ingrediantModels; // model 0 = plate. the rest will match this indexing of the ingredients enum
     [SerializeField] private Transform[] ingrediantModelSlots = new Transform[MAX_COMBO];
@@ -36,7 +30,7 @@ public class ComboItem : Item
 
     // ---setters---
     public void SetPlate(bool hasPlate) { plate = hasPlate; }
-    public void SetContents(int index, ingredients ingredient) { contents[index] = ingredient; UpdateComboModel(); }
+    public void SetContents(int index, ingredients ingredient) { contents[index] = ingredient; UpdateCombo(); }
 
     // ---unity methods---
     private void Awake()
@@ -65,7 +59,7 @@ public class ComboItem : Item
                 contents[i] = incomingItem.RemoveIngredient();
             }
         }
-        UpdateComboModel();
+        UpdateCombo();
         if(incomingItem.isEmptyComboItem())
         {
             Player holdingPlayer = incomingItem.GetHoldingPlayer();
@@ -83,7 +77,7 @@ public class ComboItem : Item
         }
         else
         {
-            incomingItem.UpdateComboModel();
+            incomingItem.UpdateCombo();
         }
 
     }
@@ -109,34 +103,62 @@ public class ComboItem : Item
         return empty;
     }
 
-    // update the appearance of the combined food item
-    public void UpdateComboModel()
+    // update the appearance and stats of the combined food item
+    public void UpdateCombo()
     {
-        if (plate)
+        SetScore(0);
+
+        // clear ingredient and plate models
+        foreach (Transform t in plateModelSlot)
         {
-            SpawnModel(plateModelSlot, 0);
+            Destroy(t.gameObject);
         }
-        else if (plateModelSlot.childCount > 0)
+        foreach (Transform t in ingrediantModelSlots)
         {
-            foreach (Transform t in plateModelSlot)
-            {
-                Destroy(t.gameObject);
-            }
-        }
-        foreach(Transform t in ingrediantModelSlots)
-        {
-            foreach(Transform ct in t)
+            foreach (Transform ct in t)
             {
                 Destroy(ct.gameObject);
             }
         }
 
+        if (plate)
+        {
+            SpawnModel(plateModelSlot, 0);
+            SetScore(GetScore() + ItemStats.SCORE_PLATE);
+        }
+
         for (int i = 0; i < MAX_COMBO; i++)
         {
             ingredients ingredient = GetContents()[i];
-            if (ingredient != ingredients.empty)
+            if (ingredient == ingredients.berrie)
             {
-                SpawnModel(ingrediantModelSlots[i], (int) ingredient);
+                SpawnModel(ingrediantModelSlots[i], (int)ingredient);
+                SetScore(GetScore() + ItemStats.SCORE_BERRY);
+            }
+            else if (ingredient == ingredients.carrots)
+            {
+                SpawnModel(ingrediantModelSlots[i], (int)ingredient);
+                SetScore(GetScore() + ItemStats.SCORE_CARROT);
+            }
+            else if (ingredient == ingredients.lettuce)
+            {
+                SpawnModel(ingrediantModelSlots[i], (int)ingredient);
+                SetScore(GetScore() + ItemStats.SCORE_LETTUCE);
+            }
+            else if (ingredient == ingredients.redCabbage)
+            {
+                SpawnModel(ingrediantModelSlots[i], (int)ingredient);
+                SetScore(GetScore() + ItemStats.SCORE_RED_CABBAGE);
+            }
+            else if (ingredient == ingredients.squash)
+            {
+                SpawnModel(ingrediantModelSlots[i], (int)ingredient);
+                SetScore(GetScore() + ItemStats.SCORE_SQUASH);
+            }
+            else if (ingredient == ingredients.tomato)
+            {
+                SpawnModel(ingrediantModelSlots[i], (int)ingredient);
+                SetScore(GetScore() + ItemStats.SCORE_TOMATO);
             }
         }
     }

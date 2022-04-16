@@ -13,7 +13,7 @@ using UnityEngine;
 // base class for items that can be picked up by the player
 public abstract class Item : MonoBehaviour
 {
-    // ---data members---
+    // ---Enums---
     public enum ingredients
     {
         empty, // used for combo slots that are empty
@@ -25,20 +25,27 @@ public abstract class Item : MonoBehaviour
         tomato,
     }
 
+    // ---data members---
     [SerializeField] private Rigidbody rBody;       // currently the rigidbody and collider are not used; here for future implementation
     [SerializeField] private Collider itemCollider; // currently the rigidbody and collider are not used; here for future implementation
     [SerializeField] private Counter currentCounter;
 
     private Vector3 initialScale;
     private Player holdingPlayer;
+    private Player lastHoldingPlayer; //used for remembering who last had this item.
+    private int score;
 
     // ---getters---
     public Counter GetCurrentCounter() { return currentCounter; }
     public Player GetHoldingPlayer() { return holdingPlayer; }
+    public Player GetLastHoldingPlayer() { return lastHoldingPlayer; }
+    public int GetScore() { return score; }
 
     // ---setters---
     private void SetCurrentCounter(Counter newCounter) { currentCounter = newCounter; }
     private void SetHoldingPlayer(Player newHoldingPlayer) { holdingPlayer = newHoldingPlayer; }
+    private void SetLastHoldingPlayer(Player newLhp) { holdingPlayer = newLhp; }
+    protected void SetScore(int newScore) { score = newScore; }
 
     // ---unity methods---
     private void Awake()
@@ -66,6 +73,7 @@ public abstract class Item : MonoBehaviour
         SetCurrentCounter(null);
         transform.localEulerAngles = Vector3.zero;
         SetHoldingPlayer(player);
+        lastHoldingPlayer = player;
     }
 
     // call this when placing the item in/on something

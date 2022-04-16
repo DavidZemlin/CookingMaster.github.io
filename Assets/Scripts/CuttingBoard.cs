@@ -51,7 +51,7 @@ public class CuttingBoard : Counter
             if (itemOnSideBoard == null)
             {
                 RemoveItem();
-                GetSideBoard().recieveItem(itemOnCuttingBoard);
+                GetSideBoard().receiveItem(itemOnCuttingBoard);
             }
             else if (itemOnSideBoard.GetType() == typeof(ComboItem) &&  itemOnCuttingBoard.GetType() == typeof(ComboItem))
             {

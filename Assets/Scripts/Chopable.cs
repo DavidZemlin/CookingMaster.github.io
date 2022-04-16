@@ -15,13 +15,6 @@ using UnityEngine;
 public class Chopable : Item
 {
     // ---data members---
-    public const float BERRIES_CHOP_TIME = 8.0f;
-    public const float CARROTS_CHOP_TIME = 8.0f;
-    public const float LETTUCE_CHOP_TIME = 10.0f;
-    public const float RED_CABBAGE_CHOP_TIME = 7.0f;
-    public const float SQUASH_CHOP_TIME = 5.0f;
-    public const float TOMATO_CHOP_TIME = 6.0f;
-
     [SerializeField] private ingredients ingredientType;
     [SerializeField] private GameObject choppedPrefab;
 
@@ -42,27 +35,33 @@ public class Chopable : Item
         // set score of this type of ingredient
         if(ingredientType == ingredients.berrie)
         {
-            SetChoppingTimeLeft(BERRIES_CHOP_TIME);
+            SetChoppingTimeLeft(ItemStats.CHOP_TIME_BERRY);
+            SetScore(ItemStats.SCORE_BERRY / ItemStats.UNCHOPPED_INGREDIENT_DIVISOR);
         }
         if (ingredientType == ingredients.carrots)
         {
-            SetChoppingTimeLeft(CARROTS_CHOP_TIME);
+            SetChoppingTimeLeft(ItemStats.CHOP_TIME_CARROT);
+            SetScore(ItemStats.SCORE_CARROT / ItemStats.UNCHOPPED_INGREDIENT_DIVISOR);
         }
         if (ingredientType == ingredients.lettuce)
         {
-            SetChoppingTimeLeft(LETTUCE_CHOP_TIME);
+            SetChoppingTimeLeft(ItemStats.CHOP_TIME_LETTUCE);
+            SetScore(ItemStats.SCORE_LETTUCE / ItemStats.UNCHOPPED_INGREDIENT_DIVISOR);
         }
         if (ingredientType == ingredients.redCabbage)
         {
-            SetChoppingTimeLeft(RED_CABBAGE_CHOP_TIME);
+            SetChoppingTimeLeft(ItemStats.CHOP_TIME_RED_CABBAGE);
+            SetScore(ItemStats.SCORE_RED_CABBAGE / ItemStats.UNCHOPPED_INGREDIENT_DIVISOR);
         }
         if (ingredientType == ingredients.squash)
         {
-            SetChoppingTimeLeft(SQUASH_CHOP_TIME);
+            SetChoppingTimeLeft(ItemStats.CHOP_TIME_SQUASH);
+            SetScore(ItemStats.SCORE_SQUASH / ItemStats.UNCHOPPED_INGREDIENT_DIVISOR);
         }
         if (ingredientType == ingredients.tomato)
         {
-            SetChoppingTimeLeft(TOMATO_CHOP_TIME);
+            SetChoppingTimeLeft(ItemStats.CHOP_TIME_TOMATO);
+            SetScore(ItemStats.SCORE_TOMATO / ItemStats.UNCHOPPED_INGREDIENT_DIVISOR);
         }
     }
 
@@ -74,7 +73,7 @@ public class Chopable : Item
         Counter location = GetCurrentCounter();
         location.RemoveItem();
         GameObject choppedItem = Instantiate(choppedPrefab);
-        location.recieveItem(choppedItem.GetComponent<Item>());
+        location.receiveItem(choppedItem.GetComponent<Item>());
         ComboItem comboScript = choppedItem.GetComponent<ComboItem>();
         comboScript.SetContents(0, ingredientType);
 

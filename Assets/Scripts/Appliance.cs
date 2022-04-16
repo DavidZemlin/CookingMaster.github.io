@@ -6,8 +6,5 @@ public abstract class Appliance : MonoBehaviour
 {
     // ---primary methods---
 
-    public virtual void Use(Player usingPlayer)
-    {
-
-    }
+    public abstract void Use(Player usingPlayer);
 }

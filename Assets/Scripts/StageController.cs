@@ -19,15 +19,21 @@ public class StageController : MonoBehaviour
     private AudioSource musicPlayer;
     private Player player1;
     private Player player2;
+    private int player1Score;
+    private int player2Score;
+
+    // ---getters---
+    private HudController GetHudController() { return hudController; }
+    private AudioSource GetMusicPlayer() { return musicPlayer; }
+    public int GetPlayer1Score() { return player1Score; }
+    public int GetPlayer2Score() { return player2Score; }
 
     // ---setters---
     private void SetGameController(GameController gameCont) { gameController = gameCont; }
     private void SetHudController(HudController hudCont) { hudController = hudCont; }
     private void SetMusicPlayer(AudioSource audioScource) { musicPlayer = audioScource; }
-
-    // ---getters---
-    private HudController GetHudController() { return hudController; }
-    private AudioSource GetMusicPlayer() { return musicPlayer; }
+    private void SetPlayer1Score(int newScore) { player1Score = newScore; }
+    private void SetPlayer2Score(int newScore) { player2Score = newScore; }
 
     // ---primary methods---
 
@@ -66,5 +72,32 @@ public class StageController : MonoBehaviour
         // start  music
         GetMusicPlayer().volume = gameController.GetGameData().GetMusicVolume();
         GetMusicPlayer().Play();
+    }
+
+    public void AddScore(Player player, int score)
+    {
+        int playerNum = player.GetPlayerNumber();
+        if (playerNum == 1)
+        {
+            SetPlayer1Score(GetPlayer1Score() + score);
+        }
+        else
+        {
+            SetPlayer2Score(GetPlayer2Score() + score);
+        }
+        hudController.NoticeAddPlayerScore(playerNum, score);
+    }
+    public void SubtractScore(Player player, int score)
+    {
+        int playerNum = player.GetPlayerNumber();
+        if (playerNum == 1)
+        {
+            SetPlayer1Score(GetPlayer1Score() - score);
+        }
+        else
+        {
+            SetPlayer2Score(GetPlayer2Score() - score);
+        }
+        hudController.NoticeSubtractPlayerScore(playerNum, score);
     }
 }

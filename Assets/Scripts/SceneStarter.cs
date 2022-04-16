@@ -38,6 +38,9 @@ public class SceneStarter : MonoBehaviour
 
     private void Awake()
     {
+        // subscribe delegate to scene loader for detecting scene changes
+        SceneManager.sceneLoaded += OnLevelLoaded;
+
         // check if there is another scene starter first, if so, then this one will self destruct
         GameObject otherStarter = GameObject.FindGameObjectWithTag("SceneStarter");
         if (otherStarter != null && otherStarter != gameObject)
@@ -70,10 +73,9 @@ public class SceneStarter : MonoBehaviour
         }
     }
 
-    private void OnLevelWasLoaded()
+    private void OnApplicationQuit()
     {
-        // start scene initialization
-        InitializeScene();
+        SceneManager.sceneLoaded -= OnLevelLoaded;
     }
 
     // ---primary methods---
@@ -85,14 +87,19 @@ public class SceneStarter : MonoBehaviour
         switch (SceneManager.GetActiveScene().name)
         {
             case "MainMenu":
-                GameObject mainMenuContObj = GameObject.Find("Main Menu Controller");
+                GameObject mainMenuContObj = GameObject.FindGameObjectWithTag("Main Menu Controller");
                 mainMenuContObj.GetComponent<MainMenuController>().Initialize(GetGameController());
                 break;
             default:
-                GameObject stageContObj = GameObject.Find("Stage Controller");
+                GameObject stageContObj = GameObject.FindGameObjectWithTag("Stage Controller");
                 stageContObj.GetComponent<StageController>().Initialize(GetGameController());
                 break;
         }
+    }
+
+    void OnLevelLoaded(Scene scene, LoadSceneMode mode)
+    {
+        InitializeScene();
     }
 }
 

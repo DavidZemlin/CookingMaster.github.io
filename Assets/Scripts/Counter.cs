@@ -22,7 +22,7 @@ public class Counter : Appliance
     // ---primary methods---
 
     // called when an item is attempting to be placed on/in this counter
-    public void recieveItem(Item item)
+    public virtual void receiveItem(Item item)
     {
         if (GetItemOnCounter() == null)
         {
@@ -37,5 +37,11 @@ public class Counter : Appliance
     public void RemoveItem()
     {
         SetItemOnCounter(null);
+    }
+
+    // counter does not have any functionality when "used" 
+    public override void Use(Player usingPlayer)
+    {
+        // future code goes here...
     }
 }
