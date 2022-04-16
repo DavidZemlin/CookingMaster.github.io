@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Item leftHandItem; // ---------------------------------- serialized for debug
     [SerializeField] private Item rightHandItem; // ---------------------------------- serialized for debug
 
-    // these data member will be accessed directly, as they will be accessed at least every frame
+    // these data member will be accessed directly, as they will be accessed at least every fixed update
     private bool controllable = true;
     private bool moving;
     private bool chopping;
@@ -228,7 +228,15 @@ public class Player : MonoBehaviour
             if (appliance != null)
             {
                 Counter counter = appliance.gameObject.GetComponent<Counter>();
-                if (counter != null)
+                ServingCounter servingCounter = appliance.gameObject.GetComponent<ServingCounter>();
+                if (servingCounter != null)
+                {
+                    if (servingCounter.GetCustomerIsPresent())
+                    {
+                        PlaceItem(servingCounter, leftHandItem);
+                    }
+                }
+                else if (counter != null)
                 {
                     Item itemOnCounter = counter.GetItemOnCounter();
                     if (itemOnCounter == null)
@@ -280,6 +288,7 @@ public class Player : MonoBehaviour
         item.OnPickUp(this);
         item.transform.parent = openHand;
         item.transform.localPosition = Vector3.zero;
+        UpdateInventoryHud();
     }
 
     // place/drop an item
@@ -290,6 +299,7 @@ public class Player : MonoBehaviour
         SetLeftHandItem(null);
         destination.receiveItem(itemInhand);
         SwapItemRightToLeftHand();
+        UpdateInventoryHud();
     }
 
     // combine items
@@ -299,6 +309,7 @@ public class Player : MonoBehaviour
         ComboItem destinationCombo = (ComboItem)destination.GetItemOnCounter();
         ComboItem incomingCombo = (ComboItem)itemInhand;
         destinationCombo.Combine(incomingCombo);
+        UpdateInventoryHud();
     }
 
     // destroy item in players left hand
@@ -307,6 +318,7 @@ public class Player : MonoBehaviour
         GetLeftHandItem().DestroyItem();
         SetLeftHandItem(null);
         SwapItemRightToLeftHand();
+        UpdateInventoryHud();
     }
 
     // move an item from the right hand to the left hand
@@ -334,5 +346,10 @@ public class Player : MonoBehaviour
         animator.SetBool("chopping", false);
         chopping = false;
         controllable = true;
+    }
+
+    public void UpdateInventoryHud()
+    {
+        GetHudController().UpdateInventoryHud(playerNumber, leftHandItem, rightHandItem);
     }
 }

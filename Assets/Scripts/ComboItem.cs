@@ -16,6 +16,7 @@ public class ComboItem : Item
 {
     // ---data members---
     [SerializeField] private DishTag dishTag;
+    [SerializeField] private DishTag uiDishTag;
     [SerializeField] private GameObject[] ingrediantModels; // model 0 = plate. the rest will match this indexing of the ingredients enum
     [SerializeField] private Transform[] ingrediantModelSlots = new Transform[ItemStats.MAX_COMBO];
     [SerializeField] private Transform plateModelSlot;
@@ -27,6 +28,7 @@ public class ComboItem : Item
     public bool GetPlate() { return plate; }
     public ingredients[] GetContents() {return contents; }
     private DishTag GetDishTag() { return dishTag; }
+    private DishTag GetUiDishTag() { return uiDishTag; }
 
     // ---setters---
     public void SetPlate(bool hasPlate) { plate = hasPlate; }
@@ -169,7 +171,9 @@ public class ComboItem : Item
             }
         }
 
-        GetDishTag().ChangeTag(GetContents());
+        GetDishTag().ChangeTag(GetContents(), GetPlate());
+        GetUiDishTag().ChangeTag(GetContents(), GetPlate());
+        SetItemImage(GetUiDishTag().gameObject);
     }
 
     // remove first ingredient and shift the other ingredients forward on the list

@@ -125,7 +125,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rBody: {fileID: 372543821242781507}
   itemCollider: {fileID: 6240868678075104270}
-  currentCounter: {fileID: 0}
+  itemImage: {fileID: 415847647886132852, guid: 480eccbc4cf9aa6448470c3b6c1429fb,
+    type: 3}
   ingredientType: 1
   choppedPrefab: {fileID: 34432789264037093, guid: 9f93f5d077c620a4393023a90d665314,
     type: 3}

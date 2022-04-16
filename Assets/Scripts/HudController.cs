@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 // this class manages messages sent from various objects sends the appropriate response to the display.
 //      including score and time updates, and warnings for things like,
@@ -9,26 +11,105 @@ using UnityEngine;
 public class HudController : MonoBehaviour
 {
     // ---data members---
+    [SerializeField] private TMP_Text player1Name;
+    [SerializeField] private TMP_Text player2Name;
+    [SerializeField] private TMP_Text player1Timer;
+    [SerializeField] private TMP_Text player2Timer;
+    [SerializeField] private TMP_Text player1Score;
+    [SerializeField] private TMP_Text player2Score;
+    [SerializeField] private Transform player1LeftItemSlot;
+    [SerializeField] private Transform player1RightItemSlot;
+    [SerializeField] private Transform player2LeftItemSlot;
+    [SerializeField] private Transform player2RightItemSlot;
+
     private StageController stageController;
 
     // ---getters---
     private StageController GetStageController() { return stageController; }
+    private Transform GetPlayer1LeftItemSlot() { return player1LeftItemSlot; }
+    private Transform GetPlayer1RightItemSlot() { return player1RightItemSlot; }
+    private Transform GetPlayer2LeftItemSlot() { return player2LeftItemSlot; }
+    private Transform GetPlayer2RightItemSlot() { return player2RightItemSlot; }
 
     // ---setters---
     private void SetStageController(StageController stageCont) { stageController = stageCont; }
 
     // ---unity methods---
-    private void Awake()
+    private void Update()
     {
-        SetStageController(GameObject.FindGameObjectWithTag("Stage Controller").GetComponent<StageController>());
+        // update player time display
+        player1Timer.SetText("" + (int)stageController.GetPlayer1TimeLeft());
+        player2Timer.SetText("" + (int)stageController.GetPlayer2TimeLeft());
+        player1Score.SetText("" + stageController.GetPlayer1Score());
+        player2Score.SetText("" + stageController.GetPlayer2Score());
     }
 
     // ---primary methods---
+
+    // used instead of "awake"
+    public void Initialize(StageController stageCont, GameController gameCont)
+    {
+        SetStageController(GameObject.FindGameObjectWithTag("Stage Controller").GetComponent<StageController>());
+        player1Name.SetText(gameCont.GetGameData().GetPlayer1Name());
+        player2Name.SetText(gameCont.GetGameData().GetPlayer2Name());
+    }
+
+    // update the item inventory of the given player
+    public void UpdateInventoryHud(int playerNumber, Item leftHandItem, Item rightHandItem)
+    {
+        if (playerNumber == 1)
+        {
+            foreach (Transform t in GetPlayer1LeftItemSlot())
+            {
+                Destroy(t.gameObject);
+            }
+            foreach (Transform t in GetPlayer1RightItemSlot())
+            {
+                Destroy(t.gameObject);
+            }
+            if (leftHandItem != null)
+            {
+                GameObject newImage = Instantiate(leftHandItem.GetItemImage(), GetPlayer1LeftItemSlot());
+                newImage.transform.localPosition = Vector3.zero;
+                newImage.SetActive(true);
+            }
+            if (rightHandItem != null)
+            {
+                GameObject newImage = Instantiate(rightHandItem.GetItemImage(), GetPlayer1RightItemSlot());
+                newImage.transform.localPosition = Vector3.zero;
+                newImage.SetActive(true);
+            }
+        }
+        else
+        {
+            foreach (Transform t in GetPlayer2LeftItemSlot())
+            {
+                Destroy(t.gameObject);
+            }
+            foreach (Transform t in GetPlayer2RightItemSlot())
+            {
+                Destroy(t.gameObject);
+            }
+            if (leftHandItem != null)
+            {
+                GameObject newImage = Instantiate(leftHandItem.GetItemImage(), GetPlayer2LeftItemSlot());
+                newImage.transform.localPosition = Vector3.zero;
+                newImage.SetActive(true);
+            }
+            if (rightHandItem != null)
+            {
+                GameObject newImage = Instantiate(rightHandItem.GetItemImage(), GetPlayer2RightItemSlot());
+                newImage.transform.localPosition = Vector3.zero;
+                newImage.SetActive(true);
+            }
+        }
+    }
 
     // Flashes a full hands warning on the hud
     public void NoticeFullHands(Player player)
     {
         // Future Feature
+        // will flash a symbol over the player
         Debug.Log(player.gameObject.name + "'s hands are full.");
     }
 
@@ -36,13 +117,14 @@ public class HudController : MonoBehaviour
     public void NoticeUnchopableItem(Player player)
     {
         // Future Feature
-
+        // will flash a symbol over the player
         Debug.Log(player.gameObject.name + "can't chop that.");
     }
     
     public void NoticeAddPlayerScore(int player, int score)
     {
         // future feature
+        // will flash a floating number over the player
         Debug.Log("Player " + player + "'s score +" + score);
         Debug.Log("Player " + player + "'s score total = " + stageController.GetPlayer1Score());
     }
@@ -50,6 +132,7 @@ public class HudController : MonoBehaviour
     public void NoticeSubtractPlayerScore(int player, int score)
     {
         // future feature
+        // will flash a floating number over the player
         Debug.Log("Player " + player + "'s score -" + score);
         Debug.Log("Player " + player + "'s score total = " + stageController.GetPlayer1Score());
     }

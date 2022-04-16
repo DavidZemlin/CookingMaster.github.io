@@ -28,8 +28,9 @@ public abstract class Item : MonoBehaviour
     // ---data members---
     [SerializeField] private Rigidbody rBody;       // currently the rigidbody and collider are not used; here for future implementation
     [SerializeField] private Collider itemCollider; // currently the rigidbody and collider are not used; here for future implementation
-    [SerializeField] private Counter currentCounter;
+    [SerializeField] private GameObject itemImage;
 
+    private Counter currentCounter; 
     private Vector3 initialScale;
     private Player holdingPlayer;
     private Player lastHoldingPlayer; //used for remembering who last had this item.
@@ -40,12 +41,14 @@ public abstract class Item : MonoBehaviour
     public Player GetHoldingPlayer() { return holdingPlayer; }
     public Player GetLastHoldingPlayer() { return lastHoldingPlayer; }
     public int GetScore() { return score; }
+    public GameObject GetItemImage() { return itemImage; }
 
     // ---setters---
     private void SetCurrentCounter(Counter newCounter) { currentCounter = newCounter; }
     private void SetHoldingPlayer(Player newHoldingPlayer) { holdingPlayer = newHoldingPlayer; }
     private void SetLastHoldingPlayer(Player newLhp) { holdingPlayer = newLhp; }
     protected void SetScore(int newScore) { score = newScore; }
+    protected void SetItemImage(GameObject newImage) { itemImage = newImage; }
 
     // ---unity methods---
     private void Awake()

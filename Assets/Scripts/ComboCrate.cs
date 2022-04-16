@@ -39,6 +39,7 @@ public class ComboCrate : Crate
             {
                 newItemScript.SetContents(i, GetPlateContents()[i]);
             }
+            newItemScript.UpdateCombo();
         }
     }
 }

@@ -5,31 +5,27 @@
 // ---setters---
 // ---constructors---
 // ---unity methods---
-// ---primary methods---
+// ---primary methods---.
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DishTag : MonoBehaviour
+public class UiDishTag : MonoBehaviour
 {
     // ---data members---
-    [SerializeField] private GameObject plateImage;
+    [SerializeField] private GameObject TagBG;
     [SerializeField] private Transform[] slots = new Transform[ItemStats.MAX_COMBO];
     [SerializeField] private GameObject[] ingredientImages;
 
     // ---getters---
-    private GameObject GetPlateImage() { return plateImage; }
+    private GameObject GetTagBG() { return TagBG; }
     private Transform[] GetSlots() { return slots; }
     private GameObject[] GetingredientImages() { return ingredientImages; }
 
     // ---primary methods---
-    public void ChangeTag(Item.ingredients[] ingredients, bool hasPlate)
+    public void ChangeWorldSpaceTag(Item.ingredients[] ingredients)
     {
-        GetPlateImage().SetActive(false);
-        if (hasPlate)
-        {
-            GetPlateImage().SetActive(true);
-        }
+        GetTagBG().SetActive(false);
         for (int i = 0; i < ItemStats.MAX_COMBO; i++)
         {
             foreach (Transform t in slots[i])
@@ -38,10 +34,13 @@ public class DishTag : MonoBehaviour
             }
             int imageNumber = (int)ingredients[i];
             GameObject tagPart = GameObject.Instantiate(GetingredientImages()[imageNumber]);
-            tagPart.transform.SetParent(GetSlots()[i]);
+            tagPart.transform.parent = GetSlots()[i];
             tagPart.transform.localEulerAngles = Vector3.zero;
             tagPart.transform.localPosition = Vector3.zero;
-            tagPart.transform.localScale = Vector3.one;
+            if (imageNumber != 0)
+            {
+                GetTagBG().SetActive(true);
+            }
         }
     }
 }
