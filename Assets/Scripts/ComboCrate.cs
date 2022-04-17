@@ -33,13 +33,13 @@ public class ComboCrate : Crate
             GameObject newItem = Instantiate(contents);
             newItem.transform.localPosition = Vector3.zero;
             ComboItem newItemScript = newItem.GetComponent<ComboItem>();
-            usingPlayer.PickUpItem(newItemScript);
             newItemScript.SetPlate(GetHasPlate());
             for (int i = 0; i < GetPlateContents().Length; i++)
             {
                 newItemScript.SetContents(i, GetPlateContents()[i]);
             }
             newItemScript.UpdateCombo();
+            usingPlayer.PickUpItem(newItemScript);
         }
     }
 }

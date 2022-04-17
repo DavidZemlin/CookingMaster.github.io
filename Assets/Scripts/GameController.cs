@@ -41,6 +41,53 @@ public class GameController : MonoBehaviour
         }
     }
 
+    // Update the high score rankings for 1 player games
+    public void ApplyToHighScores1Player(int newScore, string playerName)
+    {
+        HighScore[] highScore = GetGameData().GetHighScore();
+        GetGameData().SetHighScore(AddToScores(highScore, newScore, playerName));
+        GetGameData().saveGameData();
+    }
+
+    // Update the high score rankings for 2 player games
+    public void ApplyToHighScores2Player(int newScore, string playerName)
+    {
+        HighScore[] highScore = GetGameData().GetHighScore2Player();
+        GetGameData().SetHighScore2Player(AddToScores(highScore, newScore, playerName));
+        GetGameData().saveGameData();
+
+    }
+
+    // used to add a score into a generic array of high scores
+    private HighScore[] AddToScores(HighScore[] highScoresInput, int newScore, string playerName)
+    {
+        HighScore[] highScoreOutput = highScoresInput;
+        if (newScore > highScoreOutput[highScoreOutput.Length - 1].GetScore())
+        {
+            for (int i = highScoreOutput.Length - 1; i > 0; i--)
+            {
+                if (newScore > highScoreOutput[i - 1].GetScore())
+                {
+                    highScoreOutput[i].SetScore(highScoreOutput[i - 1].GetScore());
+                    highScoreOutput[i].SetName(highScoreOutput[i - 1].GetName());
+                    if (i == 1)
+                    {
+                        Debug.Log("111");
+                        highScoreOutput[i - 1].SetScore(newScore);
+                        highScoreOutput[i - 1].SetName(playerName);
+                    }
+                }
+                else
+                {
+                    Debug.Log("222");
+                    highScoreOutput[i].SetScore(newScore);
+                    highScoreOutput[i].SetName(playerName);
+                }
+            }
+        }
+        return highScoreOutput;
+    }
+
     // load scene - MainMenu
     public void LoadMainMenu()
     {

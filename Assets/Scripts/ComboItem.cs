@@ -54,7 +54,6 @@ public class ComboItem : Item
     // combine this item with another combo item
     public void Combine(ComboItem incomingItem)
     {
-        Debug.Log("Combine!!!");
         if (incomingItem.GetPlate() && !GetPlate())
         {
             incomingItem.SetPlate(false);

@@ -45,6 +45,7 @@ public class GameData : MonoBehaviour
     // used instead of "awake"
     public void Initialize(GameController controller)
     {
+        Debug.Log("444");
         // mark game data object as "don't destroy"
         DontDestroyOnLoad(gameObject);
 
@@ -79,6 +80,7 @@ public class GameData : MonoBehaviour
     //      then sends the encrypted list to the saveFile function to be turned into a file
     public void saveGameData()
     {
+        Debug.Log("777");
         List<string> dataPack = new List<string>();
 
         // save the last entered player names
@@ -92,15 +94,15 @@ public class GameData : MonoBehaviour
         // save High Scores
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
         {
-            dataPack.Add(highScores[i].getName());
-            dataPack.Add(highScores[i].getScore().ToString());
+            dataPack.Add(highScores[i].GetName());
+            dataPack.Add(highScores[i].GetScore().ToString());
         }
         dataPack.Add(END_OF_CATAGORY_LINE);
 
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
         {
-            dataPack.Add(highScores2Player[i].getName());
-            dataPack.Add(highScores2Player[i].getScore().ToString());
+            dataPack.Add(highScores2Player[i].GetName());
+            dataPack.Add(highScores2Player[i].GetScore().ToString());
         }
         dataPack.Add(END_OF_CATAGORY_LINE);
 
@@ -114,6 +116,7 @@ public class GameData : MonoBehaviour
     // loading function for retrieving game data from a file.
     public void loadGameData()
     {
+        Debug.Log("555");
         List<string> dataPack = new List<string>();
         dataPack = decryptPackage(LoadFile(SAVE_FILE_NAME));
 

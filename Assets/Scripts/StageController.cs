@@ -14,15 +14,19 @@ using UnityEngine;
 public class StageController : MonoBehaviour
 {
     // ---data members---
-    public const float STARTING_TIMER = 180.0f;
+    public const float SPEED_BOOST_DURATION = 15.0f;
 
     [SerializeField] private ServingCounter[] servingCounters;
+    [SerializeField] private GameObject[] powerUps;
+    [SerializeField] private int startingTimerValue;
+
 
     private GameController gameController;
     private HudController hudController;
     private AudioSource musicPlayer;
     private Player player1;
     private Player player2;
+    [SerializeField] private List<Counter> powerUpDropPoints = new List<Counter>(); // ---------------------------------- serialized for debug
     private int player1Score;
     private int player2Score;
 
@@ -48,10 +52,15 @@ public class StageController : MonoBehaviour
     [SerializeField] private float timeElapsedThisStep; // ---------------------------------- serialized for debug
     [SerializeField] private float timeLeftPlayer1; // ---------------------------------- serialized for debug
     [SerializeField] private float timeLeftPlayer2; // ---------------------------------- serialized for debug
+    [SerializeField] private float speedBoostLeftPlayer1; // ---------------------------------- serialized for debug
+    [SerializeField] private float speedBoostLeftPlayer2; // ---------------------------------- serialized for debug
 
     // ---getters---
     private HudController GetHudController() { return hudController; }
     private AudioSource GetMusicPlayer() { return musicPlayer; }
+    private int GetStartingTimerValue() { return startingTimerValue; }
+    private Player GetPlayer1() { return player1; }
+    private Player GetPlayer2() { return player2; }
     public int GetPlayer1Score() { return player1Score; }
     public int GetPlayer2Score() { return player2Score; }
     public float GetPlayer1TimeLeft() { return timeLeftPlayer1; }
@@ -61,8 +70,12 @@ public class StageController : MonoBehaviour
     private void SetGameController(GameController gameCont) { gameController = gameCont; }
     private void SetHudController(HudController hudCont) { hudController = hudCont; }
     private void SetMusicPlayer(AudioSource audioScource) { musicPlayer = audioScource; }
+    private void SetPlayer1(Player newPlayer) { player1 = newPlayer; }
+    private void SetPlayer2(Player newPlayer) { player2 = newPlayer; }
     private void SetPlayer1Score(int newScore) { player1Score = newScore; }
     private void SetPlayer2Score(int newScore) { player2Score = newScore; }
+    private void SetPlayer1TimeLeft(float newTime) { timeLeftPlayer1 = newTime; }
+    private void SetPlayer2TimeLeft(float newTime) { timeLeftPlayer2 = newTime; }
 
     // ---unity methods---
     private void FixedUpdate()
@@ -81,6 +94,40 @@ public class StageController : MonoBehaviour
         {
             SummonPatron();
             timeOfNextCustomerArival = timeElapsed + currentBusinessPace;
+        }
+
+        // manage active power-ups
+        if (timeElapsed > speedBoostLeftPlayer1)
+        {
+            GetPlayer1().StopSpeedBoost();
+        }
+        if (player2 != null && timeElapsed > speedBoostLeftPlayer2)
+        {
+            GetPlayer2().StopSpeedBoost();
+        }
+
+        // check for time expiration and end the level if both player's time is out
+        if (player1.gameObject.activeSelf && timeLeftPlayer1 <= 0.0f)
+        {
+            player1.gameObject.SetActive(false);
+        }
+        if (player2 != null && timeLeftPlayer2 <= 0.0f)
+        {
+            player2.gameObject.SetActive(false);
+        }
+        if (player2 != null)
+        {
+            if (!player1.gameObject.activeSelf && !player2.gameObject.activeSelf)
+            {
+                endStage();
+            }
+        }
+        else
+        {
+            if (!player1.gameObject.activeSelf)
+            {
+                endStage();
+            }
         }
     }
     
@@ -101,8 +148,8 @@ public class StageController : MonoBehaviour
         if(player1Obj != null)
         {
             // Initialize Player 1
-            player1 = player1Obj.GetComponent<Player>();
-            player1.Initialize(this, GetHudController());
+            SetPlayer1(player1Obj.GetComponent<Player>());
+            GetPlayer1().Initialize(this, GetHudController());
         }
         else
         {
@@ -111,12 +158,24 @@ public class StageController : MonoBehaviour
         if (player2Obj != null)
         {
             // Initialize Player 2
-            player2 = player2Obj.GetComponent<Player>();
-            player2.Initialize(this, GetHudController());
+            SetPlayer2(player2Obj.GetComponent<Player>());
+            GetPlayer2().Initialize(this, GetHudController());
         }
         else
         {
             // here we need to put the hud controller into 1 player mode
+            hudController.HidePlayer2Hud();
+        }
+
+        // find all counters
+        GameObject[] appliences = GameObject.FindGameObjectsWithTag("Appliance");
+        foreach(GameObject g in appliences)
+        {
+            Counter counterScript = g.GetComponent<Counter>();
+            if (counterScript != null && counterScript.GetCanSpawnPowerUps())
+            {
+                powerUpDropPoints.Add(counterScript);
+            }
         }
 
         // start  music
@@ -124,11 +183,12 @@ public class StageController : MonoBehaviour
         GetMusicPlayer().Play();
 
         // fill player times and mark stage start time
-        timeLeftPlayer1 = STARTING_TIMER;
-        timeLeftPlayer2 = STARTING_TIMER;
+        timeLeftPlayer1 = GetStartingTimerValue();
+        timeLeftPlayer2 = GetStartingTimerValue();
         startTime = Time.timeSinceLevelLoad;
     }
 
+    // brings a patron to one of the counters
     public void SummonPatron()
     {
         foreach (ServingCounter s in servingCounters)
@@ -141,6 +201,7 @@ public class StageController : MonoBehaviour
         }
     }
 
+    // adds score to a player
     public void AddScore(int playerNum, int score)
     {
         if (playerNum == 1)
@@ -154,6 +215,7 @@ public class StageController : MonoBehaviour
         hudController.NoticeAddPlayerScore(playerNum, score);
     }
 
+    // subtracts score from a player
     public void SubtractScore(int playerNum, int score)
     {
         if (playerNum == 1)
@@ -165,5 +227,71 @@ public class StageController : MonoBehaviour
             SetPlayer2Score(GetPlayer2Score() - score);
         }
         hudController.NoticeSubtractPlayerScore(playerNum, score);
+    }
+
+    // spawns a random Power up in a random unoccupied space
+    public void SpawnPowerUp(int playerNumber)
+    {
+        List<Counter> openCounters = new List<Counter>();
+        foreach (Counter c in powerUpDropPoints)
+        {
+            if (c.GetItemOnCounter() == null)
+            {
+                openCounters.Add(c);
+            }
+        }
+
+        if (openCounters.Count > 0)
+        {
+            int powerUpRoll = Random.Range(0, powerUps.Length);
+            GameObject powerUpObj = Instantiate(powerUps[powerUpRoll]);
+            PowerUp powerUpItem = powerUpObj.GetComponent<PowerUp>();
+            powerUpItem.Initialize(playerNumber, this);
+
+            int locationRoll = Random.Range(0, openCounters.Count);
+            openCounters[locationRoll].receiveItem(powerUpItem);
+        }
+    }
+
+    // activate speed boost for a player
+    public void SpeedBoost(int playerNumber, float boostMultiplier)
+    {
+        if (playerNumber == 1)
+        {
+            speedBoostLeftPlayer1 = timeElapsed + SPEED_BOOST_DURATION;
+            GetPlayer1().StartSpeedBoost(boostMultiplier);
+        }
+        else
+        {
+            speedBoostLeftPlayer2 = timeElapsed + SPEED_BOOST_DURATION;
+            GetPlayer2().StartSpeedBoost(boostMultiplier);
+        }
+    }
+
+    // increase Player time left
+    public void AddTimeToPlayerClock(int playerNumber, float timeAdd)
+    {
+        if (playerNumber == 1)
+        {
+            SetPlayer1TimeLeft(GetPlayer1TimeLeft() + timeAdd);
+        }
+        else
+        {
+            SetPlayer2TimeLeft(GetPlayer2TimeLeft() + timeAdd);
+        }
+    }
+
+    private void endStage()
+    {
+        if (player2 == null)
+        {
+            gameController.ApplyToHighScores1Player(player1Score, gameController.GetGameData().GetPlayer1Name());
+        }
+        else
+        {
+            gameController.ApplyToHighScores2Player(player1Score, gameController.GetGameData().GetPlayer1Name());
+            gameController.ApplyToHighScores2Player(player2Score, gameController.GetGameData().GetPlayer2Name());
+        }
+        gameController.LoadMainMenu();
     }
 }

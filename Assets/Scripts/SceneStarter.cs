@@ -41,36 +41,27 @@ public class SceneStarter : MonoBehaviour
         // subscribe delegate to scene loader for detecting scene changes
         SceneManager.sceneLoaded += OnLevelLoaded;
 
-        // check if there is another scene starter first, if so, then this one will self destruct
-        GameObject otherStarter = GameObject.FindGameObjectWithTag("SceneStarter");
-        if (otherStarter != null && otherStarter != gameObject)
+        // find references for or instantiate game controller and game data objects and scripts
+        GameObject gameControllObj = GameObject.FindGameObjectWithTag("GameController");
+        if (gameControllObj == null)
         {
-            Destroy(gameObject);
+            gameControllObj = Instantiate(gameControllerPrefab);
         }
-        else
+        SetGameController(gameControllObj.GetComponent<GameController>());
+
+        GameObject gameDataObj = GameObject.FindGameObjectWithTag("GameData");
+        if (gameDataObj == null)
         {
-            // find references for or instantiate game controller and game data objects and scripts
-            GameObject gameControllObj = GameObject.FindGameObjectWithTag("GameController");
-            if (gameControllObj == null)
-            {
-                gameControllObj = Instantiate(gameControllerPrefab);
-            }
-            SetGameController(gameControllObj.GetComponent<GameController>());
-
-            GameObject gameDataObj = GameObject.FindGameObjectWithTag("GameData");
-            if (gameDataObj == null)
-            {
-                gameDataObj = Instantiate(gameDataPrefab);
-            }
-            SetGameData(gameDataObj.GetComponent<GameData>());
-
-            // Initialize game controller and data
-            gameData.Initialize(GetGameController());
-            gameController.Initialize(GetGameData());
-
-            // start scene initialization
-            InitializeScene();
+            gameDataObj = Instantiate(gameDataPrefab);
         }
+        SetGameData(gameDataObj.GetComponent<GameData>());
+
+        // Initialize game controller and data
+        gameData.Initialize(GetGameController());
+        gameController.Initialize(GetGameData());
+
+        // start scene initialization
+        InitializeScene();
     }
 
     private void OnApplicationQuit()
@@ -86,8 +77,10 @@ public class SceneStarter : MonoBehaviour
     {
         switch (SceneManager.GetActiveScene().name)
         {
+            case "StartUp":
+                break;
             case "MainMenu":
-                GameObject mainMenuContObj = GameObject.FindGameObjectWithTag("Main Menu Controller");
+                GameObject mainMenuContObj = GameObject.Find("Main Menu Controller");
                 mainMenuContObj.GetComponent<MainMenuController>().Initialize(GetGameController());
                 break;
             default:

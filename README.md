@@ -13,8 +13,8 @@ Pink = Berries
 
 To-Do
 =====================
-customers
-powerups
+Clean up the code
+fix high score not working correctly
 
 Future Plans
 =====================
@@ -59,7 +59,7 @@ Time Card
 	minor fixes
 	Trashcan
 	Item Tags
-4-16-22
+4-16-22 12:00 - 03:00
 	HUD
 	CustomerInteractions
-	
+	finished working build

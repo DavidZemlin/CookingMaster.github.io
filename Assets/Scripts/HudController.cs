@@ -11,6 +11,7 @@ using TMPro;
 public class HudController : MonoBehaviour
 {
     // ---data members---
+    [SerializeField] private GameObject[] objectsToHideIn1PlayerGame;
     [SerializeField] private TMP_Text player1Name;
     [SerializeField] private TMP_Text player2Name;
     [SerializeField] private TMP_Text player1Timer;
@@ -54,6 +55,14 @@ public class HudController : MonoBehaviour
         player2Name.SetText(gameCont.GetGameData().GetPlayer2Name());
     }
 
+    // hides player 2 info panels
+    public void HidePlayer2Hud()
+    {
+        foreach (GameObject g in objectsToHideIn1PlayerGame)
+        {
+            g.SetActive(false);
+        }
+    }
     // update the item inventory of the given player
     public void UpdateInventoryHud(int playerNumber, Item leftHandItem, Item rightHandItem)
     {
@@ -110,7 +119,6 @@ public class HudController : MonoBehaviour
     {
         // Future Feature
         // will flash a symbol over the player
-        Debug.Log(player.gameObject.name + "'s hands are full.");
     }
 
     // Flashes an unchoppable item warning on the hud
@@ -118,22 +126,17 @@ public class HudController : MonoBehaviour
     {
         // Future Feature
         // will flash a symbol over the player
-        Debug.Log(player.gameObject.name + "can't chop that.");
     }
     
     public void NoticeAddPlayerScore(int player, int score)
     {
         // future feature
         // will flash a floating number over the player
-        Debug.Log("Player " + player + "'s score +" + score);
-        Debug.Log("Player " + player + "'s score total = " + stageController.GetPlayer1Score());
     }
 
     public void NoticeSubtractPlayerScore(int player, int score)
     {
         // future feature
         // will flash a floating number over the player
-        Debug.Log("Player " + player + "'s score -" + score);
-        Debug.Log("Player " + player + "'s score total = " + stageController.GetPlayer1Score());
     }
 }

@@ -10,11 +10,14 @@ public class Counter : Appliance
 {
     // ---data members---
     [SerializeField] private Transform itemSlot;
+    [SerializeField] private bool canSpawnPowerUps;
     private Item itemOnCounter;
 
     // ---getters---
     public Item GetItemOnCounter() { return itemOnCounter; }
+    public bool GetCanSpawnPowerUps() { return canSpawnPowerUps; }
     private Transform GetItemSlot() { return itemSlot; }
+    
 
     // ---setters---
     private void SetItemOnCounter(Item item) { itemOnCounter = item; }

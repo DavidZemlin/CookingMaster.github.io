@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     private bool controllable = true;
     private bool moving;
     private bool chopping;
+    private float speedBoost;
     private float vert;
     private float hori;
     private float soundEffectNextPlayTime;
@@ -108,18 +109,61 @@ public class Player : MonoBehaviour
         }
         else if (playerNumber == 2)
         {
-            // copy all player one controls here when done-----------------------------------------------------------------------------------------
+            if (Input.GetButton("LeftP2"))
+            {
+                moving = true;
+                hori = -1;
+            }
+            else if (Input.GetButton("RightP2"))
+            {
+                moving = true;
+                hori = 1;
+            }
+            else
+            {
+                hori = 0;
+            }
+
+            if (Input.GetButton("UpP2"))
+            {
+                moving = true;
+                vert = 1;
+            }
+            else if (Input.GetButton("DownP2"))
+            {
+                moving = true;
+                vert = -1;
+            }
+            else
+            {
+                vert = 0;
+            }
+
+            if (Input.GetButtonDown("PickUpP2"))
+            {
+                PickUpCommand();
+            }
+
+            if (Input.GetButtonDown("DropP2"))
+            {
+                DropCommand();
+            }
+
+            if (Input.GetButtonDown("UseP2"))
+            {
+                UseCommand();
+            }
         }
 
         // set movement vector
-        moveInput = new Vector3(hori * moveSpeed, 0.0f, vert * moveSpeed);
+        moveInput = new Vector3(hori * moveSpeed * speedBoost, 0.0f, vert * moveSpeed);
         characterController.SimpleMove(moveInput);
 
         // rotate character
         if (moving)
         {
             toRotation = Quaternion.LookRotation(moveInput, Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, rotationSpeed * speedBoost * Time.deltaTime);
         }
 
     }
@@ -147,7 +191,7 @@ public class Player : MonoBehaviour
                 float chopTimeLeft = choppingItem.GetChoppingTimeLeft();
                 if (chopTimeLeft > 0)
                 {
-                    choppingItem.SetChoppingTimeLeft(chopTimeLeft - choppingSpeed);
+                    choppingItem.SetChoppingTimeLeft(chopTimeLeft - (choppingSpeed * speedBoost));
                 }
                 else
                 {
@@ -170,6 +214,7 @@ public class Player : MonoBehaviour
         // Initialize null variables
         SetStageController(stageCont);
         SetHudController(hudCont);
+        speedBoost = 1;
     }
 
     // check if the player has an open hand
@@ -201,8 +246,21 @@ public class Player : MonoBehaviour
                     Item itemOnCounter = counter.GetItemOnCounter();
                     if (itemOnCounter != null)
                     {
-                        PickUpItem(itemOnCounter);
-                        counter.RemoveItem();
+                        // check if the item is a power up
+                        PowerUp powerUp = itemOnCounter.gameObject.GetComponent<PowerUp>();
+                        if (powerUp != null)
+                        {
+                            if (powerUp.GetPlayerNumber() == playerNumber)
+                            {
+                                ActivatePowerUp(powerUp);
+                                counter.RemoveItem();
+                            }
+                        }
+                        else
+                        {
+                            PickUpItem(itemOnCounter);
+                            counter.RemoveItem();
+                        }
                         return;
                     }
                 }
@@ -291,6 +349,12 @@ public class Player : MonoBehaviour
         UpdateInventoryHud();
     }
 
+    // activate power-up
+    public void ActivatePowerUp(PowerUp powerUp)
+    {
+        powerUp.Activate();
+    }
+
     // place/drop an item
     public void PlaceItem(Counter destination, Item itemInhand)
     {
@@ -348,6 +412,19 @@ public class Player : MonoBehaviour
         controllable = true;
     }
 
+    // Start Speed Boost
+    public void StartSpeedBoost(float boostFactor)
+    {
+        speedBoost = boostFactor;
+    }
+
+    // Start Speed Boost
+    public void StopSpeedBoost()
+    {
+        speedBoost = 1;
+    }
+
+    // Updates the hud with the items currently in hand
     public void UpdateInventoryHud()
     {
         GetHudController().UpdateInventoryHud(playerNumber, leftHandItem, rightHandItem);

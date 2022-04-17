@@ -67,11 +67,11 @@ public class MainMenuController : MonoBehaviour
         HighScore[] highScores2Player = gameController.GetGameData().GetHighScore2Player();
         for (int i = 0; i < highScores.Length; i++)
         {
-            GetHighScoreText()[i].SetText(highScores[i].getName() + " : " + highScores[i].getScore().ToString());
+            GetHighScoreText()[i].SetText(highScores[i].GetName() + " : " + highScores[i].GetScore().ToString());
         }
         for (int i = 0; i < highScores2Player.Length; i++)
         {
-            GetHighScore2PlayerText()[i].SetText(highScores2Player[i].getName() + " : " + highScores2Player[i].getScore().ToString());
+            GetHighScore2PlayerText()[i].SetText(highScores2Player[i].GetName() + " : " + highScores2Player[i].GetScore().ToString());
         }
     }
 

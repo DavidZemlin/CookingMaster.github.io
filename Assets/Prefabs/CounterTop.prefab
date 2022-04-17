@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemSlot: {fileID: 6892637535656798180}
+  canSpawnPowerUps: 1
 --- !u!1 &6892637535656798187
 GameObject:
   m_ObjectHideFlags: 0

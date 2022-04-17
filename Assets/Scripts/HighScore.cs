@@ -11,8 +11,11 @@ public class HighScore
     private int score;
 
     // ---getters---
-    public string getName() { return name; }
-    public int getScore() { return score; }
+    public string GetName() { return name; }
+    public int GetScore() { return score; }
+
+    public void SetScore(int newScore) { score = newScore; }
+    public void SetName(string newName) { name = newName; }
 
     // ---constructors---
     public HighScore(string newName, int newScore)
