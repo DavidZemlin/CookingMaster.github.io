@@ -35,7 +35,7 @@ public class Trashcan : Counter
     public override void receiveItem(Item item)
     {
         item.OnPlace(this);
-        stageController.SubtractScore(item.GetLastHoldingPlayer(), item.GetScore());
+        stageController.SubtractScore(item.GetLastHoldingPlayer().GetPlayerNumber(), item.GetScore());
         item.DestroyItem();
     }
 }

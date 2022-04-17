@@ -13,11 +13,12 @@ Pink = Berries
 
 To-Do
 =====================
-Trash can
-Combo Item tag
 customers
-Hud
 powerups
+
+Future Plans
+=====================
+Add tool tips to ALL exposed variables
 
 
 Time Card
@@ -52,8 +53,13 @@ Time Card
 	Made stage loader
 	fixed sound leves
 	fixed some encapsulation issues
-4-15-22 18:15
+4-15-22 18:15 - 02:00
 	Item combonation implemented
 	auto combine from cuttingboard implemented
 	minor fixes
+	Trashcan
+	Item Tags
+4-16-22
+	HUD
+	CustomerInteractions
 	

@@ -16,10 +16,7 @@ public class StageController : MonoBehaviour
     // ---data members---
     public const float STARTING_TIMER = 180.0f;
 
-    [SerializeField] private float startingCustomerPatience;
-    [SerializeField] private float patienceReductionFactor;
-    [SerializeField] private float startingBusinessPace;
-    [SerializeField] private float bussinessIncreasePace;
+    [SerializeField] private ServingCounter[] servingCounters;
 
     private GameController gameController;
     private HudController hudController;
@@ -30,7 +27,23 @@ public class StageController : MonoBehaviour
     private int player2Score;
 
     // these data member will be accessed directly, as they will be accessed at least every fixed update
+    [Tooltip("This is the starting amount of seconds a customer will wait")]
+    [SerializeField] private float startingCustomerPatience;
+    [Tooltip("This amount will be multiplied by the current elapsed time (in seconds) and subtracted from the starting customer patience to calculate the patience of new customers. This number should be a VERY small fraction")]
+    [SerializeField] private float patienceReductionFactor;
+    [Tooltip("This allows you to set a minimum floor to the patience of a customer")]
+    [SerializeField] private float minimumPatience;
+    [Tooltip("This is the starting amount of seconds it will take for a new patron to come")]
+    [SerializeField] private float startingBusinessPace;
+    [Tooltip("This amount will be multiplied by the current elapsed time (in seconds) and subtracted from the starting Business Pace to calculate the time between new customer. This number should be a VERY small fraction")]
+    [SerializeField] private float bussinessIncreaseFactor;
+    [Tooltip("This allows you to set a minimum floor to the time between customers")]
+    [SerializeField] private float minimumTimeBetweenCustomers;
+
     private float startTime;
+    private float timeOfNextCustomerArival;
+    [SerializeField] private float currentPatience; // ---------------------------------- serialized for debug
+    [SerializeField] private float currentBusinessPace; // ---------------------------------- serialized for debug
     [SerializeField] private float timeElapsed; // ---------------------------------- serialized for debug
     [SerializeField] private float timeElapsedThisStep; // ---------------------------------- serialized for debug
     [SerializeField] private float timeLeftPlayer1; // ---------------------------------- serialized for debug
@@ -60,6 +73,15 @@ public class StageController : MonoBehaviour
         timeElapsedThisStep = timeElapsed - previousTimeElapsed;
         timeLeftPlayer1 = timeLeftPlayer1 - timeElapsedThisStep;
         timeLeftPlayer2 = timeLeftPlayer2 - timeElapsedThisStep;
+
+        currentPatience = startingCustomerPatience - (timeElapsed * patienceReductionFactor);
+        currentBusinessPace = startingBusinessPace - (timeElapsed * bussinessIncreaseFactor);
+
+        if (timeElapsed > timeOfNextCustomerArival)
+        {
+            SummonPatron();
+            timeOfNextCustomerArival = timeElapsed + currentBusinessPace;
+        }
     }
     
     // ---primary methods---
@@ -107,9 +129,20 @@ public class StageController : MonoBehaviour
         startTime = Time.timeSinceLevelLoad;
     }
 
-    public void AddScore(Player player, int score)
+    public void SummonPatron()
     {
-        int playerNum = player.GetPlayerNumber();
+        foreach (ServingCounter s in servingCounters)
+        {
+            if (!s.GetCustomerIsPresent())
+            {
+                s.SummonPatorn(currentPatience);
+                return;
+            }
+        }
+    }
+
+    public void AddScore(int playerNum, int score)
+    {
         if (playerNum == 1)
         {
             SetPlayer1Score(GetPlayer1Score() + score);
@@ -120,9 +153,9 @@ public class StageController : MonoBehaviour
         }
         hudController.NoticeAddPlayerScore(playerNum, score);
     }
-    public void SubtractScore(Player player, int score)
+
+    public void SubtractScore(int playerNum, int score)
     {
-        int playerNum = player.GetPlayerNumber();
         if (playerNum == 1)
         {
             SetPlayer1Score(GetPlayer1Score() - score);
