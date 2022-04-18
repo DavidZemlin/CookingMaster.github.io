@@ -1,13 +1,4 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-// ---------------------------------- serialized for debug
-// ---data members---
-// ---getters---
-// ---setters---
-// ---constructors---
-// ---unity methods---
-// ---primary methods---
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // this appliance can be used to turn chopable items into combo items.

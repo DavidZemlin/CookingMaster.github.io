@@ -1,6 +1,25 @@
 # CookingMaster.github.io
 A simple chef game
 
+Controls
+=====================
+Player 1
+q = pick up
+e = put down
+c = use / chop
+w = move up
+s = move down
+a = move left
+d = move right
+
+Player 2
+Num Pad 7 = pick up
+Num Pad 9 = put down
+Num Pad 3 = use / chop
+Num Pad 8 = move up
+Num Pad 2 = move down
+Num Pad 4 = move left
+Num Pad 6 = move right
 
 Ingredients
 =====================
@@ -11,15 +30,17 @@ Yellow = Squash
 Orange = Carrot
 Pink = Berries
 
-To-Do
+Future Ideas
 =====================
-Clean up the code
-fix high score not working correctly
-
-Future Plans
-=====================
+clean up the scripts much more
+ease up on the encapsulation of privatly accessed variables
 Add tool tips to ALL exposed variables
-
+more stages
+unlockables
+achievments
+more animations
+action stages where you have to run and dog attackes and traps!
+really the list goes on forever!
 
 Time Card
 =====================
@@ -63,3 +84,8 @@ Time Card
 	HUD
 	CustomerInteractions
 	finished working build
+4-18-22 02:30 - 5:30
+	fixed broken highscores
+	added winning screen
+	minor cleaning on scripts
+        made angry, more angry

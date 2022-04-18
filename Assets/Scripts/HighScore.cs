@@ -1,7 +1,4 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 // simple class for storing high-score data
 public class HighScore

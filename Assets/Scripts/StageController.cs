@@ -1,12 +1,4 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-// ---------------------------------- serialized for debug
-// ---data members---
-// ---getters---
-// ---setters---
-// ---constructors---
-// ---unity methods---
-// ---primary methods---
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +18,7 @@ public class StageController : MonoBehaviour
     private AudioSource musicPlayer;
     private Player player1;
     private Player player2;
-    [SerializeField] private List<Counter> powerUpDropPoints = new List<Counter>(); // ---------------------------------- serialized for debug
+    private List<Counter> powerUpDropPoints = new List<Counter>();
     private int player1Score;
     private int player2Score;
 
@@ -46,14 +38,14 @@ public class StageController : MonoBehaviour
 
     private float startTime;
     private float timeOfNextCustomerArival;
-    [SerializeField] private float currentPatience; // ---------------------------------- serialized for debug
-    [SerializeField] private float currentBusinessPace; // ---------------------------------- serialized for debug
-    [SerializeField] private float timeElapsed; // ---------------------------------- serialized for debug
-    [SerializeField] private float timeElapsedThisStep; // ---------------------------------- serialized for debug
-    [SerializeField] private float timeLeftPlayer1; // ---------------------------------- serialized for debug
-    [SerializeField] private float timeLeftPlayer2; // ---------------------------------- serialized for debug
-    [SerializeField] private float speedBoostLeftPlayer1; // ---------------------------------- serialized for debug
-    [SerializeField] private float speedBoostLeftPlayer2; // ---------------------------------- serialized for debug
+    private float currentPatience;
+    private float currentBusinessPace;
+    private float timeElapsed;
+    private float timeElapsedThisStep;
+    private float timeLeftPlayer1;
+    private float timeLeftPlayer2;
+    private float speedBoostLeftPlayer1;
+    private float speedBoostLeftPlayer2;
 
     // ---getters---
     private HudController GetHudController() { return hudController; }
@@ -218,11 +210,11 @@ public class StageController : MonoBehaviour
     // subtracts score from a player
     public void SubtractScore(int playerNum, int score)
     {
-        if (playerNum == 1)
+        if (playerNum == 1 && player1.gameObject.activeSelf)
         {
             SetPlayer1Score(GetPlayer1Score() - score);
         }
-        else
+        else if (playerNum == 2 && player2.gameObject.activeSelf)
         {
             SetPlayer2Score(GetPlayer2Score() - score);
         }
@@ -285,13 +277,17 @@ public class StageController : MonoBehaviour
     {
         if (player2 == null)
         {
+            gameController.SetPlayer1LastScore(player1Score);
             gameController.ApplyToHighScores1Player(player1Score, gameController.GetGameData().GetPlayer1Name());
+            gameController.LoadMainMenu();
         }
         else
         {
+            gameController.SetPlayer1LastScore(player1Score);
+            gameController.SetPlayer2LastScore(player2Score);
             gameController.ApplyToHighScores2Player(player1Score, gameController.GetGameData().GetPlayer1Name());
             gameController.ApplyToHighScores2Player(player2Score, gameController.GetGameData().GetPlayer2Name());
+            gameController.LoadMainMenuReturnVersion();
         }
-        gameController.LoadMainMenu();
     }
 }

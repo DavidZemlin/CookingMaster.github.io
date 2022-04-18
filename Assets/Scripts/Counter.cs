@@ -1,6 +1,4 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // this is for a type of appliance that can hold an item on top or inside it.
@@ -42,7 +40,7 @@ public class Counter : Appliance
         SetItemOnCounter(null);
     }
 
-    // counter does not have any functionality when "used" 
+    // counter does not have any functionality when "used" but may in future updates. currently this is a bridge to some derived classes
     public override void Use(Player usingPlayer)
     {
         // future code goes here...

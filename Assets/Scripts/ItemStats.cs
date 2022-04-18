@@ -1,7 +1,4 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 // this class contains all numerical stats for items in the game; stats such as score, or chopping time.
 public static class ItemStats

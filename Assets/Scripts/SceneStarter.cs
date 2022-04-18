@@ -1,21 +1,8 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-// ---------------------------------- serialized for debug
-// ---data members---
-// ---getters---
-// ---setters---
-// ---constructors---
-// ---unity methods---
-// ---primary methods---
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-// this script helps manage startup of a scene.
-//      it's primary purpose is to allow loading the game from scenes other than the start up scene.
-//      therefore, all instances of this script should be removed from scenes other than the startup
-//      scene in consumer facing builds
+// this script helps manage startup of a scene. Consider merging back into Game Controller
 
 public class SceneStarter : MonoBehaviour
 {
@@ -82,6 +69,12 @@ public class SceneStarter : MonoBehaviour
             case "MainMenu":
                 GameObject mainMenuContObj = GameObject.Find("Main Menu Controller");
                 mainMenuContObj.GetComponent<MainMenuController>().Initialize(GetGameController());
+                break;
+            case "MainMenuReturnVersion":
+                GameObject mainMenu2ContObj = GameObject.Find("Main Menu Controller");
+                MainMenuController menuScript = mainMenu2ContObj.GetComponent<MainMenuController>();
+                menuScript.Initialize(GetGameController());
+                menuScript.LoadWinnerScrean();
                 break;
             default:
                 GameObject stageContObj = GameObject.FindGameObjectWithTag("Stage Controller");

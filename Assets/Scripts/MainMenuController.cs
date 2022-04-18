@@ -16,6 +16,13 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider soundSlider;
     [SerializeField] private AudioSource soundTester;
+    [SerializeField] private TMP_Text WinnerMenuPlayer1Name;
+    [SerializeField] private TMP_Text WinnerMenuPlayer2Name;
+    [SerializeField] private TMP_Text WinnerMenuPlayer1Score;
+    [SerializeField] private TMP_Text WinnerMenuPlayer2Score;
+    [SerializeField] private GameObject WinnerMenuPlayer1Wins;
+    [SerializeField] private GameObject WinnerMenuPlayer2Wins;
+    [SerializeField] private GameObject WinnerMenuTieGame;
 
     private GameController gameController;
     private AudioSource musicPlayer;
@@ -33,6 +40,13 @@ public class MainMenuController : MonoBehaviour
     private Slider GetSoundSlider() { return soundSlider; }
     private AudioSource GetSoundTester() { return soundTester; }
     private AudioSource GetMusicPlayer() { return musicPlayer; }
+    private TMP_Text GetWinnerMenuPlayer1Name() { return WinnerMenuPlayer1Name; }
+    private TMP_Text GetWinnerMenuPlayer2Name() { return WinnerMenuPlayer2Name; }
+    private TMP_Text GetWinnerMenuPlayer1Score() { return WinnerMenuPlayer1Score; }
+    private TMP_Text GetWinnerMenuPlayer2Score() { return WinnerMenuPlayer2Score; }
+    private GameObject GetWinnerMenuPlayer1Wins() { return WinnerMenuPlayer1Wins; }
+    private GameObject GetWinnerMenuPlayer2Wins() { return WinnerMenuPlayer2Wins; }
+    private GameObject GetWinnerMenuTieGame() { return WinnerMenuTieGame; }
 
     // ---primary methods---
 
@@ -46,6 +60,33 @@ public class MainMenuController : MonoBehaviour
         // start  music
         AdjustMusicVolume();
         GetMusicPlayer().Play();
+    }
+
+    // load the winner screen and player names scores and who won
+    public void LoadWinnerScrean()
+    {
+        if (gameController.GetPlayer1LastScore() > gameController.GetPlayer2LastScore())
+        {
+            GetWinnerMenuPlayer1Wins().SetActive(true);
+            GetWinnerMenuPlayer2Wins().SetActive(false);
+            GetWinnerMenuTieGame().SetActive(false);
+        }
+        else if (gameController.GetPlayer2LastScore() > gameController.GetPlayer1LastScore())
+        {
+            GetWinnerMenuPlayer1Wins().SetActive(false);
+            GetWinnerMenuPlayer2Wins().SetActive(true);
+            GetWinnerMenuTieGame().SetActive(false);
+        }
+        else
+        {
+            GetWinnerMenuPlayer1Wins().SetActive(false);
+            GetWinnerMenuPlayer2Wins().SetActive(false);
+            GetWinnerMenuTieGame().SetActive(true);
+        }
+        GetWinnerMenuPlayer1Name().SetText(gameController.GetGameData().GetPlayer1Name());
+        GetWinnerMenuPlayer2Name().SetText(gameController.GetGameData().GetPlayer2Name());
+        GetWinnerMenuPlayer1Score().SetText(gameController.GetPlayer1LastScore().ToString());
+        GetWinnerMenuPlayer2Score().SetText(gameController.GetPlayer2LastScore().ToString());
     }
 
     // menu call to start a 1 player game

@@ -1761,13 +1761,10 @@ MonoBehaviour:
   leftHandSlot: {fileID: 428598417}
   rightHandSlot: {fileID: 392954369}
   playerNumber: 2
-  leftHandItem: {fileID: 0}
-  rightHandItem: {fileID: 0}
   soundEffectDelay: 0.5
   moveSpeed: 4
   rotationSpeed: 1000
-  choppingSpeed: 1
-  choppingItem: {fileID: 0}
+  choppingSpeed: 0.05
 --- !u!143 &127546130
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3225,13 +3222,10 @@ MonoBehaviour:
   leftHandSlot: {fileID: 1325685156}
   rightHandSlot: {fileID: 1771527953}
   playerNumber: 1
-  leftHandItem: {fileID: 0}
-  rightHandItem: {fileID: 0}
   soundEffectDelay: 0.5
   moveSpeed: 4
   rotationSpeed: 1000
-  choppingSpeed: 1
-  choppingItem: {fileID: 0}
+  choppingSpeed: 0.05
 --- !u!95 &271172348
 Animator:
   serializedVersion: 3
@@ -4423,7 +4417,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 415707935}
   m_LocalRotation: {x: 0.58347034, y: 0, z: 0, w: 0.8121345}
-  m_LocalPosition: {x: 6.4, y: 15.84, z: -0.95}
+  m_LocalPosition: {x: 6.4, y: 13, z: 1.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1650175214}
@@ -8341,22 +8335,13 @@ MonoBehaviour:
   - {fileID: 2142392626277987414, guid: 726aad3d98123624d81f59a0e7457971, type: 3}
   - {fileID: 6777639351599700922, guid: f17ce4b651d665241a3224e7ec428046, type: 3}
   - {fileID: 4905514537293462693, guid: efad5d8b2669a974ea5af2affab1401d, type: 3}
-  startingTimerValue: 60
-  powerUpDropPoints: []
-  startingCustomerPatience: 60
+  startingTimerValue: 300
+  startingCustomerPatience: 180
   patienceReductionFactor: 0.001
   minimumPatience: 15
-  startingBusinessPace: 20
+  startingBusinessPace: 30
   bussinessIncreaseFactor: 0.01
   minimumTimeBetweenCustomers: 5
-  currentPatience: 0
-  currentBusinessPace: 0
-  timeElapsed: 0
-  timeElapsedThisStep: 0
-  timeLeftPlayer1: 0
-  timeLeftPlayer2: 0
-  speedBoostLeftPlayer1: 0
-  speedBoostLeftPlayer2: 0
 --- !u!4 &876565486
 Transform:
   m_ObjectHideFlags: 0
@@ -10837,6 +10822,11 @@ PrefabInstance:
     - target: {fileID: 6892637535157329093, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6892637535157329094, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
+        type: 3}
+      propertyPath: canSpawnPowerUps
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6892637535157329097, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
@@ -18568,6 +18558,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6892637535157329094, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
+        type: 3}
+      propertyPath: canSpawnPowerUps
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6892637535157329097, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
         type: 3}
       propertyPath: m_Name
@@ -20124,6 +20119,11 @@ PrefabInstance:
     - target: {fileID: 6892637535157329093, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6892637535157329094, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
+        type: 3}
+      propertyPath: canSpawnPowerUps
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6892637535157329097, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
@@ -21906,6 +21906,11 @@ PrefabInstance:
     - target: {fileID: 6892637535157329093, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6892637535157329094, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,
+        type: 3}
+      propertyPath: canSpawnPowerUps
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6892637535157329097, guid: ab1f8ff0b2084b0499c2a10518a0d5fa,

@@ -1,22 +1,27 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 // this script handles core application functions and serves as the main
 //       connection between game managing classes and data managers
+//       currently a lot of it's work is delegated to scene specific controllers
+//       so consider merging this with the scene starter class and others
 public class GameController : MonoBehaviour
 {
     // ---data members---
     private GameData gameData;
-
-    // ---setters---
-    private void SetGameData(GameData data) { gameData = data; }
+    private int player1LastScore;
+    private int player2LastScore;
 
     // ---getters---
     public GameData GetGameData() { return gameData; }
+    public int GetPlayer1LastScore() { return player1LastScore; }
+    public int GetPlayer2LastScore() { return player2LastScore; }
+
+    // ---setters---
+    private void SetGameData(GameData data) { gameData = data; }
+    public void SetPlayer1LastScore(int newScore) { player1LastScore = newScore; }
+    public void SetPlayer2LastScore(int newScore) { player2LastScore = newScore; }
 
     // ---unity methods---
     void OnApplicationQuit()
@@ -46,7 +51,6 @@ public class GameController : MonoBehaviour
     {
         HighScore[] highScore = GetGameData().GetHighScore();
         GetGameData().SetHighScore(AddToScores(highScore, newScore, playerName));
-        GetGameData().saveGameData();
     }
 
     // Update the high score rankings for 2 player games
@@ -54,7 +58,6 @@ public class GameController : MonoBehaviour
     {
         HighScore[] highScore = GetGameData().GetHighScore2Player();
         GetGameData().SetHighScore2Player(AddToScores(highScore, newScore, playerName));
-        GetGameData().saveGameData();
 
     }
 
@@ -72,18 +75,22 @@ public class GameController : MonoBehaviour
                     highScoreOutput[i].SetName(highScoreOutput[i - 1].GetName());
                     if (i == 1)
                     {
-                        Debug.Log("111");
                         highScoreOutput[i - 1].SetScore(newScore);
                         highScoreOutput[i - 1].SetName(playerName);
+                        break;
                     }
                 }
                 else
                 {
-                    Debug.Log("222");
                     highScoreOutput[i].SetScore(newScore);
                     highScoreOutput[i].SetName(playerName);
+                    break;
                 }
             }
+        }
+        foreach (HighScore h in highScoreOutput)
+        {
+            Debug.Log(h.GetName() + " : " + h.GetScore());
         }
         return highScoreOutput;
     }
@@ -92,6 +99,13 @@ public class GameController : MonoBehaviour
     public void LoadMainMenu()
     {
         SceneManager.LoadScene("MainMenu");
+    }
+
+    // load scene - MainMenuMainMenuReturnVersion
+    //      this is the scene that is loaded after a 2 player game is finished
+    public void LoadMainMenuReturnVersion()
+    {
+        SceneManager.LoadScene("MainMenuReturnVersion");
     }
 
     // load scene - 1PlayerGame

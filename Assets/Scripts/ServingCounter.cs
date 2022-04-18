@@ -1,21 +1,12 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-// ---------------------------------- serialized for debug
-// ---data members---
-// ---getters---
-// ---setters---
-// ---constructors---
-// ---unity methods---
-// ---primary methods---
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ServingCounter : Counter
 {
     // ---data members---
-    public const int CUSTOMER_PENALTY = 100;
-    public const float ANGRY_MULTIPLIER = 1.5f;
+    public const int CUSTOMER_PENALTY = 50;
+    public const float ANGRY_MULTIPLIER = 2f;
     public const float NONPLUSSED_THRESHOLD = 0.7f;
 
     [SerializeField] private GameObject customer;
@@ -24,7 +15,7 @@ public class ServingCounter : Counter
     [SerializeField] private DishTag orderTag;
 
     private StageController stageController;
-    [SerializeField] private Item.ingredients[] order; // ---------------------------------- serialized for debug
+    private Item.ingredients[] order;
     private bool customerIsPresent;
     private bool customerIsNonPlussed;
     private bool customerIsAngry;
@@ -32,8 +23,8 @@ public class ServingCounter : Counter
     private float patienceStart;
 
     // these data member will be accessed directly, as they will be accessed at least every fixed update
-    [SerializeField] private float patienceCurrent; // ---------------------------------- serialized for debug
-    [SerializeField] private float patienceCurrentPercent; // ---------------------------------- serialized for debug
+    private float patienceCurrent;
+    private float patienceCurrentPercent;
 
     // ---getters---
     private StageController GetStageController() { return stageController; }
@@ -61,12 +52,11 @@ public class ServingCounter : Counter
     {
         SetStageController(GameObject.FindGameObjectWithTag("Stage Controller").GetComponent<StageController>());
         order = new Item.ingredients[ItemStats.MAX_COMBO];
-
-
     }
 
     private void Update()
     {
+        // manage customer timers and attitude
         if (customerIsPresent)
         {
             if (GetCustomerIsAngry())
@@ -117,6 +107,7 @@ public class ServingCounter : Counter
             }
             // add the score to the player that served them
             stageController.AddScore(playerNumber, item.GetScore());
+            PatronLeave();
         }
         // if the order is wrong...
         else
@@ -269,6 +260,4 @@ public class ServingCounter : Counter
 
         return result;
     }
-
-
 }

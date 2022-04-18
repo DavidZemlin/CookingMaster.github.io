@@ -6,5 +6,6 @@ public abstract class Appliance : MonoBehaviour
 {
     // ---primary methods---
 
+    // base use function that appliances will use to do their stuff
     public abstract void Use(Player usingPlayer);
 }

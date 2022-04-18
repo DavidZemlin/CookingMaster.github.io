@@ -21,8 +21,8 @@ public class Player : MonoBehaviour
     private HudController hudController;
     private Vector3 moveInput;
     private Quaternion toRotation;
-    [SerializeField] private Item leftHandItem; // ---------------------------------- serialized for debug
-    [SerializeField] private Item rightHandItem; // ---------------------------------- serialized for debug
+    private Item leftHandItem;
+    private Item rightHandItem;
 
     // these data member will be accessed directly, as they will be accessed at least every fixed update
     private bool controllable = true;
@@ -32,11 +32,11 @@ public class Player : MonoBehaviour
     private float vert;
     private float hori;
     private float soundEffectNextPlayTime;
-    [SerializeField] private float soundEffectDelay; // ---------------------------------- serialized for debug <--- make consts for default speeds
-    [SerializeField] private float moveSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
-    [SerializeField] private float rotationSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
-    [SerializeField] private float choppingSpeed; // ---------------------------------- serialized for debug <--- make consts for default speeds
-    [SerializeField] private Chopable choppingItem; // ---------------------------------- serialized for debug
+    [SerializeField] private float soundEffectDelay; // ---------------------------------- serialized for debug <--- make consts for default speeds once a default speed has been chosen
+    [SerializeField] private float moveSpeed;        // ---------------------------------- serialized for debug <--- make consts for default speeds once a default speed has been chosen
+    [SerializeField] private float rotationSpeed;    // ---------------------------------- serialized for debug <--- make consts for default speeds once a default speed has been chosen
+    [SerializeField] private float choppingSpeed;    // ---------------------------------- serialized for debug <--- make consts for default speeds once a default speed has been chosen
+    private Chopable choppingItem;
 
     // ---getters---
     public HudController GetHudController() { return hudController; }
@@ -107,7 +107,7 @@ public class Player : MonoBehaviour
                 UseCommand();
             }
         }
-        else if (playerNumber == 2)
+        else if (controllable && playerNumber == 2)
         {
             if (Input.GetButton("LeftP2"))
             {

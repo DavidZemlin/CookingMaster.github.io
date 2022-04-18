@@ -11,13 +11,14 @@ public class GameData : MonoBehaviour
     public const int NUMBER_OF_HIGH_SCORES = 10;
     public const string END_OF_CATAGORY_LINE = "--c--";
 
-    private const string DEFAULT_NAME = "Player";
     private const string SAVE_FILE_NAME = "save.dat";
+    private const string DEFAULT_NAME = "Player";
+    private const int DEFAULT_SCORE = -1000;
     private const int DEFAULT_VOLUME = 100;
 
     private GameController gameController;
-    [SerializeField] private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES]; // ---------------------------------- serialized for debug
-    [SerializeField] private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES]; // ---------------------------------- serialized for debug
+    private HighScore[] highScores = new HighScore[NUMBER_OF_HIGH_SCORES];
+    private HighScore[] highScores2Player = new HighScore[NUMBER_OF_HIGH_SCORES];
     private string player1Name = DEFAULT_NAME;
     private string player2Name = DEFAULT_NAME;
     private int musicVolume = DEFAULT_VOLUME;
@@ -45,7 +46,6 @@ public class GameData : MonoBehaviour
     // used instead of "awake"
     public void Initialize(GameController controller)
     {
-        Debug.Log("444");
         // mark game data object as "don't destroy"
         DontDestroyOnLoad(gameObject);
 
@@ -63,11 +63,11 @@ public class GameData : MonoBehaviour
         // initialize high score lists;
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
         {
-            highScores[i] = new HighScore(DEFAULT_NAME, 0);
+            highScores[i] = new HighScore(DEFAULT_NAME, DEFAULT_SCORE);
         }
         for (int i = 0; i < NUMBER_OF_HIGH_SCORES; i++)
         {
-            highScores2Player[i] = new HighScore(DEFAULT_NAME, 0);
+            highScores2Player[i] = new HighScore(DEFAULT_NAME, DEFAULT_SCORE);
         }
 
         // load data if there is any
@@ -80,7 +80,6 @@ public class GameData : MonoBehaviour
     //      then sends the encrypted list to the saveFile function to be turned into a file
     public void saveGameData()
     {
-        Debug.Log("777");
         List<string> dataPack = new List<string>();
 
         // save the last entered player names
@@ -116,9 +115,12 @@ public class GameData : MonoBehaviour
     // loading function for retrieving game data from a file.
     public void loadGameData()
     {
-        Debug.Log("555");
         List<string> dataPack = new List<string>();
         dataPack = decryptPackage(LoadFile(SAVE_FILE_NAME));
+        if (dataPack == null)
+        {
+            return;
+        }
 
         int lineNumber = 0;
 
@@ -138,19 +140,20 @@ public class GameData : MonoBehaviour
         int counter = 0;
         while (END_OF_CATAGORY_LINE.CompareTo(dataPack[lineNumber]) != 0)
         {
-            string name = "" + dataPack[lineNumber]; // used concatenation instead of copying, because it is easier on the eyes
+            string name = "" + dataPack[lineNumber]; // change to to-string method later
             lineNumber++;
             int score = int.Parse(dataPack[lineNumber]);
             lineNumber++;
             highScores[counter] = new HighScore(name, score);
             counter++;
         }
+        lineNumber++;
 
         // read 2 player high scores
         counter = 0;
         while (END_OF_CATAGORY_LINE.CompareTo(dataPack[lineNumber]) != 0)
         {
-            string name = "" + dataPack[lineNumber];
+            string name = "" + dataPack[lineNumber]; // change to to-string method later
             lineNumber++;
             int score = int.Parse(dataPack[lineNumber]);
             lineNumber++;
@@ -162,11 +165,16 @@ public class GameData : MonoBehaviour
     // not implemented yet. currently this just returns a list identical to the one passed to it
     private List<string> decryptPackage(List<string> encryptPackage)
     {
+        if (encryptPackage == null)
+        {
+            return null;
+        }
+
         List<string> decryptedPack = new List<string>();
 
         foreach(string s in encryptPackage)
         {
-            string tempString = "" + s; // used concatenation instead of copying, because it is easier on the eyes
+            string tempString = "" + s; // change to to-string method later
             // decryption of tempString would happen here
 
             decryptedPack.Add(tempString);
@@ -182,7 +190,7 @@ public class GameData : MonoBehaviour
 
         foreach (string s in dataPack)
         {
-            string tempString = "" + s; // used concatenation instead of copying, because it is easier on the eyes
+            string tempString = "" + s; // change to to-string method later
 
             // Encryption of tempString would happen here
 
@@ -207,12 +215,16 @@ public class GameData : MonoBehaviour
     // loads a file to a list of strings
     public List<string> LoadFile(string fileName)
     {
-        List<string> linesList = new List<string>();
-        string[] lines = File.ReadAllLines(fileName);
-        foreach (string s in lines)
+        if (File.Exists(fileName))
         {
-            linesList.Add(s);
+            List<string> linesList = new List<string>();
+            string[] lines = File.ReadAllLines(fileName);
+            foreach (string s in lines)
+            {
+                linesList.Add(s);
+            }
+            return linesList;
         }
-        return linesList;
+        return null;
     }
 }

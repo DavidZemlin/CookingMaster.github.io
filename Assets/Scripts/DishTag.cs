@@ -1,15 +1,7 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-// ---------------------------------- serialized for debug
-// ---data members---
-// ---getters---
-// ---setters---
-// ---constructors---
-// ---unity methods---
-// ---primary methods---
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// manages the tag that is used to show dish contents
 public class DishTag : MonoBehaviour
 {
     // ---data members---

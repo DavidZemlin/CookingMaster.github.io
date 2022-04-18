@@ -1,8 +1,5 @@
 ﻿//This document and all its contents are copyrighted by David Zemlin and my not be used or reproduced without express written consent.
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 // this class manages messages sent from various objects sends the appropriate response to the display.
@@ -39,7 +36,7 @@ public class HudController : MonoBehaviour
     private void Update()
     {
         // update player time display
-        player1Timer.SetText("" + (int)stageController.GetPlayer1TimeLeft());
+        player1Timer.SetText("" + (int)stageController.GetPlayer1TimeLeft()); // change these to toString methods
         player2Timer.SetText("" + (int)stageController.GetPlayer2TimeLeft());
         player1Score.SetText("" + stageController.GetPlayer1Score());
         player2Score.SetText("" + stageController.GetPlayer2Score());
@@ -53,6 +50,10 @@ public class HudController : MonoBehaviour
         SetStageController(GameObject.FindGameObjectWithTag("Stage Controller").GetComponent<StageController>());
         player1Name.SetText(gameCont.GetGameData().GetPlayer1Name());
         player2Name.SetText(gameCont.GetGameData().GetPlayer2Name());
+        player1Score.SetText(stageCont.GetPlayer1Score().ToString());
+        player2Score.SetText(stageCont.GetPlayer2Score().ToString());
+        UpdateInventoryHud(1, null, null);
+        UpdateInventoryHud(2, null, null);
     }
 
     // hides player 2 info panels
@@ -63,6 +64,7 @@ public class HudController : MonoBehaviour
             g.SetActive(false);
         }
     }
+
     // update the item inventory of the given player
     public void UpdateInventoryHud(int playerNumber, Item leftHandItem, Item rightHandItem)
     {
