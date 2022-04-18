@@ -1,6 +1,11 @@
 # CookingMaster.github.io
 A simple chef game
 
+Testing Note
+=====================
+if running from unity editor make sure to start  the game
+     from the "StartUp" scene, or else the game will not load up correctly
+
 Controls
 =====================
 Player 1
