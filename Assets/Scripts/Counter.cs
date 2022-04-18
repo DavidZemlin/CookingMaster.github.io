@@ -9,7 +9,7 @@ public class Counter : Appliance
     // ---data members---
     [SerializeField] private Transform itemSlot;
     [SerializeField] private bool canSpawnPowerUps;
-    private Item itemOnCounter;
+    [SerializeField] private Item itemOnCounter;
 
     // ---getters---
     public Item GetItemOnCounter() { return itemOnCounter; }

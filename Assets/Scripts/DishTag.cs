@@ -15,12 +15,13 @@ public class DishTag : MonoBehaviour
     private GameObject[] GetingredientImages() { return ingredientImages; }
 
     // ---primary methods---
-    public void ChangeTag(Item.ingredients[] ingredients, bool hasPlate)
+    public void ChangeTag(Item.ingredients[] ingredients, bool hasPlate, bool forHud)
     {
         GetPlateImage().SetActive(false);
-        if (hasPlate)
+        bool showPlatImage = false;
+        if (forHud)
         {
-            GetPlateImage().SetActive(true);
+            showPlatImage = true;
         }
         for (int i = 0; i < ItemStats.MAX_COMBO; i++)
         {
@@ -29,11 +30,19 @@ public class DishTag : MonoBehaviour
                 Destroy(t.gameObject);
             }
             int imageNumber = (int)ingredients[i];
-            GameObject tagPart = GameObject.Instantiate(GetingredientImages()[imageNumber]);
-            tagPart.transform.SetParent(GetSlots()[i]);
-            tagPart.transform.localEulerAngles = Vector3.zero;
-            tagPart.transform.localPosition = Vector3.zero;
-            tagPart.transform.localScale = Vector3.one;
+            if (imageNumber != 0)
+            {
+                GameObject tagPart = GameObject.Instantiate(GetingredientImages()[imageNumber]);
+                tagPart.transform.SetParent(GetSlots()[i]);
+                tagPart.transform.localEulerAngles = Vector3.zero;
+                tagPart.transform.localPosition = Vector3.zero;
+                tagPart.transform.localScale = Vector3.one;
+                showPlatImage = true;
+            }
+        }
+        if (hasPlate && showPlatImage)
+        {
+            GetPlateImage().SetActive(true);
         }
     }
 }

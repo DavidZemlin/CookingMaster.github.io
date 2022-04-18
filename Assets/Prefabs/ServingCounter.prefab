@@ -141,6 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemSlot: {fileID: 0}
   canSpawnPowerUps: 0
+  itemOnCounter: {fileID: 0}
   customer: {fileID: 4247424647616586384}
   patienceBar: {fileID: 7903850321680826883}
   customerAnim: {fileID: 511906412}

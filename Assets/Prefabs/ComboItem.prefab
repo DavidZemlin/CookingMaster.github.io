@@ -54,6 +54,7 @@ MonoBehaviour:
   rBody: {fileID: 4544350317240318811}
   itemCollider: {fileID: 7264722317473425484}
   itemImage: {fileID: 0}
+  currentCounter: {fileID: 0}
   dishTag: {fileID: 2811607975208488342}
   uiDishTag: {fileID: 591857465576112766}
   ingrediantModels:
@@ -278,6 +279,11 @@ PrefabInstance:
     - target: {fileID: 2779770482737716005, guid: fb9fbecfdb80e9f43bd5578bc2d1bfff,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3976898533596171102, guid: fb9fbecfdb80e9f43bd5578bc2d1bfff,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4442753558805910856, guid: fb9fbecfdb80e9f43bd5578bc2d1bfff,

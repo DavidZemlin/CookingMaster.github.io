@@ -11,8 +11,8 @@ public class ComboItem : Item
     [SerializeField] private GameObject[] ingrediantModels; // model 0 = plate. the rest will match this indexing of the ingredients enum
     [SerializeField] private Transform[] ingrediantModelSlots = new Transform[ItemStats.MAX_COMBO];
     [SerializeField] private Transform plateModelSlot;
+    [SerializeField] private bool plate;
 
-    private bool plate;
     private ingredients[] contents = new ingredients[ItemStats.MAX_COMBO];
 
     // ---getters---
@@ -161,8 +161,8 @@ public class ComboItem : Item
             }
         }
 
-        GetDishTag().ChangeTag(GetContents(), GetPlate());
-        GetUiDishTag().ChangeTag(GetContents(), GetPlate());
+        GetDishTag().ChangeTag(GetContents(), GetPlate(), false);
+        GetUiDishTag().ChangeTag(GetContents(), GetPlate(), true);
         SetItemImage(GetUiDishTag().gameObject);
     }
 

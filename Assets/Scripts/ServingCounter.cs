@@ -170,7 +170,7 @@ public class ServingCounter : Counter
                 }
             }
         }
-        GetOrderTag().ChangeTag(GetOrder(), true);
+        GetOrderTag().ChangeTag(GetOrder(), true, true);
     }
 
     // Customer leaves and the player he is most angry with gets a score penalty
@@ -211,7 +211,7 @@ public class ServingCounter : Counter
         {
             GetOrder()[i] = Item.ingredients.empty;
         }
-        GetOrderTag().ChangeTag(GetOrder(), true);
+        GetOrderTag().ChangeTag(GetOrder(), true, false);
         SetCustomerIsAngry(false);
         SetCustomerIsNonPlussed(false);
         customerAnim.SetBool("NonPlussed", false);

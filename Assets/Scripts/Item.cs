@@ -20,8 +20,8 @@ public abstract class Item : MonoBehaviour
     [SerializeField] private Rigidbody rBody;       // currently the rigidbody and collider are not used; here for future implementation
     [SerializeField] private Collider itemCollider; // currently the rigidbody and collider are not used; here for future implementation
     [SerializeField] private GameObject itemImage;
+    [SerializeField] private Counter currentCounter; 
 
-    private Counter currentCounter; 
     private Vector3 initialScale;
     private Player holdingPlayer;
     private Player lastHoldingPlayer; //used for remembering who last had this item.

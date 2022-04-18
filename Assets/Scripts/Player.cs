@@ -156,7 +156,7 @@ public class Player : MonoBehaviour
         }
 
         // set movement vector
-        moveInput = new Vector3(hori * moveSpeed * speedBoost, 0.0f, vert * moveSpeed);
+        moveInput = new Vector3(hori * moveSpeed * speedBoost, 0.0f, vert * moveSpeed * speedBoost);
         characterController.SimpleMove(moveInput);
 
         // rotate character
