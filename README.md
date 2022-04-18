@@ -97,3 +97,6 @@ Time Card
 4-18-22 13:30 - 14:30
 	Testing
 	bug fixes and tweeks
+4-18-22 15:15 - 15:20
+	Organized prefabs
+	changed color of side board
