@@ -27,7 +27,7 @@ Num Pad 4 = move left  <br />
 Num Pad 6 = move right  <br />
 
 Ingredients
-===================== 
+=====================
 Green = Lettuce  <br />
 Red = Tomato  <br />
 Purple = Cabbage  <br />
