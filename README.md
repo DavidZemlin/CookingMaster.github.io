@@ -94,7 +94,7 @@ Time Card
 	fixed broken highscores  <br />
 	added winning screen  <br />
 	minor cleaning on scripts  <br />
-        made angry, more angry  <br />
+	made angry, more angry  <br />
 4-18-22 13:30 - 14:30  <br />
 	Testing  <br />
 	bug fixes and tweaks  <br />
